@@ -1,0 +1,256 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.main-block{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #444;
+}
+
+.main-text{
+    transition: 1.5s;
+    position: absolute;
+    top: 35%;
+    font-size: 10em;
+    padding: 20px;
+    border: #333 solid 0.17em;
+    color: #a6a6a6;
+    z-index: 1000;
+}
+
+.main-text-scrolled{
+    top: 1%;
+    position: fixed;
+    font-size: 7em;
+    border-color: #333;
+    color: #cccc;
+    border-width: 0.15em;
+}
+
+.about-block{
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgba(68,68,68,1) 0%, rgba(170,170,170,1) 50%, rgba(204,204,204,1) 85%); 
+}
+
+.about-text{
+    transition: 1s;
+    position: absolute;
+    top: 130%;
+    font-size: 4em;
+    padding-bottom: 10px;
+    border-bottom: #555 solid 0.13em;
+    color: #606060;
+}
+
+.images{
+    margin-top: 15em;
+    transition: 1s;
+}
+
+.img{
+    width: 256px;
+    height: 256px;
+}
+
+.unshowed{
+    opacity: 0;
+}
+
+.orders{
+    height: 100vh;
+    background: linear-gradient(180deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 85%); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.orders{
+    display: flex;
+    flex-direction: column;
+}
+
+.orders-text{
+    margin-top: 3em;
+    font-size: 4em;
+    padding-bottom: 10px;
+    border-bottom: #555 solid 0.13em;
+    color: #606060;
+}
+
+.orders ul{
+    margin-top: 4em;
+}
+
+.orders ul li{
+    font-size: 3em;
+    color: #606060;
+}
+
+.footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 5px;
+    background-color: #a6a6a6;
+}
+
+.info{
+    display: flex;
+    flex-direction: row;
+    font-size: 1.5em;
+    color: #444;
+}
+
+.info i{
+    margin-right: 5px;
+}
+
+.info a{
+    transition: 0.1s;
+    color: #444;
+    text-decoration: none;
+}
+
+.info:hover a{
+    text-decoration: underline;
+    transform: scale(105%);
+}
+
+@media screen and (max-width: 800px){
+    img.img{
+        width: 128px;
+        height: auto;
+    }
+
+    div.orders ul li{
+        font-size: 2.5em;
+    }
+
+}
+
+@media screen and (max-width: 400px){
+    img.img{
+        height: auto;
+        width: 64px;
+    }
+
+    h1.main-text{
+        top: 40%;
+        font-size: 4em;
+        padding: 10px;
+        border: #333 solid 0.13em;
+    }
+
+    h1.main-text-scrolled{
+        top: 1%;
+    }
+
+    h1.about-text{
+        font-size: 2em;
+    }
+
+    div.orders ul li{
+        font-size: 1.2em;
+    }
+
+    h1.orders-text{
+        font-size: 2em;
+    }
+
+    span.info{
+        font-size: 1.2em;
+    }
+}
+
+@media screen and (min-width: 400px) and (max-width: 450px){
+    img.img{
+        height: auto;
+        width: 70px;
+    }
+
+    h1.main-text{
+        top: 40%;
+        font-size: 4.4em;
+        padding: 10px;
+        border: #333 solid 0.14em;
+    }
+
+    h1.main-text-scrolled{
+        top: 1%;
+    }
+
+    h1.about-text{
+        font-size: 2.2em;
+    }
+
+    div.orders ul li{
+        font-size: 1.4em;
+    }
+
+    h1.orders-text{
+        font-size: 2.2em;
+    }
+
+    span.info{
+        font-size: 1.2em;
+    }
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1300px){
+    img.img{
+        height: auto;
+        width: 190px;
+    }
+}
+
+@media screen and (min-width: 450px) and (max-width: 600px){
+    img.img{
+        height: auto;
+        width: 100px;
+    }
+
+    h1.main-text{
+        top: 40%;
+        font-size: 7em;
+        padding: 10px;
+        border: #333 solid 0.16em;
+    }
+
+    h1.main-text-scrolled{
+        top: 1%;
+    }
+
+    h1.about-text{
+        font-size: 2.8em;
+    }
+
+    div.orders ul li{
+        font-size: 2em;
+    }
+
+    h1.orders-text{
+        font-size: 2.8em;
+    }
+
+    span.info{
+        font-size: 1.2em;
+    }
+}
+
+@media screen and (max-width: 350px){
+    img.img{
+        height: auto;
+        width: 54px;
+    }
+}
