@@ -9,11 +9,8 @@
     <title>Python Developer</title>
 </head>
 <body>
-    <div class="main-block">
-        <span class="triangle"></span>
-        <h1 class="main-text">Vadym</h1>
-    </div>
     <div class="about-block">
+        <h1 class="main-text">Vadym</h1>
         <h1 class="about-text about-text-1">Python разработчик</h1>
         <h1 class="about-text about-text-2 unshowed">And some JAVA :)</h1>
         <div class="images">
@@ -25,19 +22,19 @@
         </div>
     </div>
     <div class="orders">
-        <h1 class="orders-text">Я делаю</h1>
+        <h1 class="orders-text">Мои возможности</h1>
         <ul>
-            <li>Ботов для discord'а</li>
-            <li>Ботов для telegram'а</li>
-            <li>API для разных целей</li>
-            <li>Бэкенд для сайтов</li>
+            <li>Делаю ботов для discord'а</li>
+            <li>Делаю ботов для telegram'а</li>
+            <li>Делаю API для разных целей</li>
+            <li>Делаю бэкенд для сайтов</li>
             <li>Настраиваю discord сервера</li>
-            <li>Парсеры для разных целей</li>
+            <li>Делаю парсеры для разных целей</li>
         </ul>
     </div>
     <footer class="footer">
         <span class="info"><i class="fab fa-github"></i><a href="https://github.com/VadyChel">Github</a></span>
-        <span class="info"><i class="fab fa-discord"></i>𝚅𝚢𝚝𝚑𝚘𝚗.𝚕𝚞𝚒#2020</span>
+        <span class="info"><i class="fab fa-discord"></i>𝚅𝚢𝚝𝚑𝚘𝚗.𝚕𝚞𝚒#9339</span>
     </footer>
 </body>
 
@@ -45,8 +42,7 @@
 <script>
     $(document).on("scroll", function () {
         var height = $(window).scrollTop();
-        console.log(height)
-        if(height >= 1250){
+        if(height >= 500){
             $(".images").addClass("unshowed");
             $(".main-text").css({"color":"#555"});
         } else{
@@ -54,17 +50,12 @@
             $(".main-text").css({"color":"#cccc"});
         }
 
-        if(height >= 1030){
+        if(height >= 200){
             $(".about-text-1").addClass("unshowed");
             $(".about-text-2").addClass("unshowed");
         } else{
             $(".about-text-1").removeClass("unshowed");
             $(".about-text-2").addClass("unshowed");
-        }
-        if (height >= 100){
-            $('.main-text').addClass('main-text-scrolled');
-        } else{
-            $('.main-text').removeClass('main-text-scrolled');
         }
     });
 
