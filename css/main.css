@@ -50,7 +50,7 @@
 }
 
 .orders{
-    height: 100vh;
+    height: 80vh;
     background: linear-gradient(180deg, rgba(204,204,204,1) 0%, rgba(255,255,255,1) 85%); 
     display: flex;
     justify-content: center;
@@ -119,6 +119,30 @@
         font-size: 2.5em;
     }
 
+    div.about-block{
+        height: 90vh;
+    }
+
+    div.orders-block{
+        height: 50vh;
+    }
+
+    h1.about-text{
+        top: 40%;
+    }
+
+}
+
+@media screen and (min-width: 800px) and (max-width: 900px){
+    img.img{
+        width: 150px;
+        height: auto;
+    }
+
+    div.orders ul li{
+        font-size: 2.5em;
+    }
+
 }
 
 @media screen and (max-width: 400px){
@@ -128,14 +152,9 @@
     }
 
     h1.main-text{
-        top: 40%;
         font-size: 4em;
         padding: 10px;
         border: #333 solid 0.13em;
-    }
-
-    h1.main-text-scrolled{
-        top: 1%;
     }
 
     h1.about-text{
@@ -143,7 +162,7 @@
     }
 
     div.orders ul li{
-        font-size: 1.2em;
+        font-size: 1em;
     }
 
     h1.orders-text{
@@ -162,14 +181,9 @@
     }
 
     h1.main-text{
-        top: 40%;
         font-size: 4.4em;
         padding: 10px;
         border: #333 solid 0.14em;
-    }
-
-    h1.main-text-scrolled{
-        top: 1%;
     }
 
     h1.about-text{
@@ -177,7 +191,7 @@
     }
 
     div.orders ul li{
-        font-size: 1.4em;
+        font-size: 1.3em;
     }
 
     h1.orders-text{
@@ -203,14 +217,9 @@
     }
 
     h1.main-text{
-        top: 40%;
         font-size: 7em;
         padding: 10px;
         border: #333 solid 0.16em;
-    }
-
-    h1.main-text-scrolled{
-        top: 1%;
     }
 
     h1.about-text{
