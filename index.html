@@ -5,67 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <link rel="icon" href="img/avatar.png">
     <title>Python Developer</title>
 </head>
 <body>
-    <div class="about-block">
-        <h1 class="main-text">Vadym</h1>
-        <h1 class="about-text about-text-1">Python разработчик</h1>
-        <h1 class="about-text about-text-2 unshowed">And some JAVA :)</h1>
+    <div class="main-block container-fluid">
+        <h1 class="about-text">Python разработчик</h1>
+        <div class="icons">
+            <a href="https://github.com/VadyChel"><i class="fab fa-github"></i></a>
+            <a href="https://discord.gg/vas8j4t"><i class="fab fa-discord"></i></a>
+        </div>
+        <h1 class="my-libs">Мои умения</h1>
         <div class="images">
-            <img src="img/python.png" alt="" class="img">
-            <img src="img/mongodb.png" alt="" class="img">
-            <img src="img/database.png" alt="" class="img">
-            <img src="img/sanic.png" alt="" class="img">
-            <img src="img/flask.png" alt="" class="img">
+            <div class="image">
+                <img src="img/python.png" alt="" class="img">
+                <span class="text">Python</span>
+            </div>
+            <div class="image">
+                <img src="img/mongodb.png" alt="" class="img">
+                <span class="text">MongoDB</span>
+            </div>
+            <div class="image">
+                <img src="img/database.png" alt="" class="img">
+                <span class="text">MySQL</span>
+            </div>
+            <div class="image">
+                <img src="img/sanic.png" alt="" class="img">
+                <span class="text">Sanic</span>
+            </div>
+            <div class="image">
+                <img src="img/flask.png" alt="" class="img">
+                <span class="text">Flask</span>
+            </div>
         </div>
     </div>
-    <div class="orders">
-        <h1 class="orders-text">Мои возможности</h1>
-        <ul>
-            <li>Делаю ботов для discord'а</li>
-            <li>Делаю ботов для telegram'а</li>
-            <li>Делаю API для разных целей</li>
-            <li>Делаю бэкенд для сайтов</li>
-            <li>Настраиваю discord сервера</li>
-            <li>Делаю парсеры для разных целей</li>
-        </ul>
-    </div>
-    <footer class="footer">
-        <span class="info"><i class="fab fa-github"></i><a href="https://github.com/VadyChel">Github</a></span>
-        <span class="info"><i class="fab fa-discord"></i>𝚅𝚢𝚝𝚑𝚘𝚗.𝚕𝚞𝚒#9339</span>
-    </footer>
 </body>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-    $(document).on("scroll", function () {
-        var height = $(window).scrollTop();
-        if(height >= 400){
-            $(".images").addClass("unshowed");
-            $(".main-text").css({"color":"#555"});
-        } else{
-            $(".images").removeClass("unshowed");
-            $(".main-text").css({"color":"#cccc"});
-        }
-
-        if(height >= 200){
-            $(".about-text-1").addClass("unshowed");
-            $(".about-text-2").addClass("unshowed");
-        } else{
-            $(".about-text-1").removeClass("unshowed");
-            $(".about-text-2").addClass("unshowed");
-        }
-    });
-
-    $('.about-text').hover(function() {
-        $(".about-text-1").addClass("unshowed");
-        $(".about-text-2").removeClass("unshowed");
-        setTimeout(function(){
-            $(".about-text-2").addClass("unshowed");
-            $(".about-text-1").removeClass("unshowed");
-        }, 3000);
-    })
-</script>
 </html>
