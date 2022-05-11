@@ -1,7 +1,7 @@
 <script setup>
 import { RouterLink } from 'vue-router'
-import CCard from '@/components/CCard.vue'
-import CLink from '@/components/CLink.vue'
+import CCard from '../components/CCard.vue'
+import CLink from '../components/CLink.vue'
 import { ref } from 'vue'
 import projects from '../projects'
 

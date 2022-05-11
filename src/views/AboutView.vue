@@ -1,5 +1,5 @@
 <script setup>
-  import CCard from '@/components/CCard.vue'
+import CCard from '../components/CCard.vue'
 </script>
 
 <template>

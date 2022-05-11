@@ -1,5 +1,5 @@
 <script setup>
-import CLink from "@/components/CLink.vue"
+import CLink from '../components/CLink.vue'
 </script>
 
 <template>
