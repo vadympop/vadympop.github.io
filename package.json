@@ -7,7 +7,7 @@
     "preview": "vite preview --port 5050",
     "lint": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lintfix": "npm run lint --fix",
-    "deploy": "npm run build && echo 'vadym.ml' > dist/CNAME && git add dist -f && git commit -m \"New version\" && git subtree push --prefix dist origin gh-pages"
+    "deploy": "npm run build && echo 'vadym.ml' > dist/CNAME && git add dist -f && git commit -m \"New version\" && git push origin gh-pages"
   },
   "dependencies": {
     "@mdi/js": "^6.6.96",
