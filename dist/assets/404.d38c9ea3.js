@@ -1,0 +1,1 @@
+import{o as e,c as t,a as s,g as a,w as c,b as o,d as r}from"./index.b6cd5570.js";const _={class:"flex items-center justify-center flex-col"},l=o("h1",{class:"text-4xl"},"Page not found",-1),n=r("Back to Home"),m={setup(d){return(i,x)=>(e(),t("div",_,[l,s(a,{class:"text-xl mt-2",url:"/"},{default:c(()=>[n]),_:1})]))}};export{m as default};
