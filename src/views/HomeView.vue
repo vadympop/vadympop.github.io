@@ -37,6 +37,12 @@ const projectsList = ref(projects)
           <mdicon name="email"></mdicon>
           <span class="text-lg ml-2">{{ info.email }}</span>
         </a>
+        <a
+          href="/Vadym_CV.pdf"
+          class="m-1 flex p-2 rounded bg-white dark:bg-blacked align-middle hover:bg-amber-500/75 dark:hover:bg-amber-800/75 duration-200">
+          <mdicon name="contacts"></mdicon>
+          <span class="text-lg ml-2">Resume</span>
+        </a>
       </div>
       <div class="mt-2 mb-4 text-base">
         <p>{{ info.shortBio }}</p>
