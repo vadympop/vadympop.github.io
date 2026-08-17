@@ -1,5 +1,5 @@
-export const CONTACTS = {
-    "LinkedIn": "https://www.linkedin.com/in/linked-in",
-    "Github": "https://github.com/vadympop",
-    "Email": "mailto:popovych.vadim.dev@gmail.com"
-}
+export const CONTACTS = [
+    {name: "LinkedIn", link: "https://www.linkedin.com/in/linked-in", icon: 'mdi-linkedin' },
+    {name: "Github", link: "https://github.com/vadympop", icon: 'mdi-github'},
+    {name: "Email", link: "mailto:popovych.vadim.dev@gmail.com", icon: 'mdi-email'}
+]
