@@ -1,6 +1,6 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "Vadym Popovych's Portfolio",
+  "short_name": "Vadym Popovych",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
