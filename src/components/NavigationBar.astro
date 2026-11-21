@@ -2,6 +2,7 @@
 import ContactLink from "./ContactLink.astro";
 import SectionShortcut from "./SectionShortcut.astro";
 import ContactsMenu from "./ContactsMenu.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 import { CONTACTS } from "../data/profile";
 ---
 
@@ -11,10 +12,11 @@ import { CONTACTS } from "../data/profile";
       {CONTACTS.map((contact) => <ContactLink text={contact.name} link={contact.link} />)}
     </div>
     <span class="max-sm:hidden grow"></span>
-    <div class="flex justify-between sm:space-x-12 w-100 sm:w-auto">
+    <div class="flex items-center justify-between sm:space-x-12 w-100 sm:w-auto">
       <ContactsMenu class="flex sm:hidden" />
       <SectionShortcut text="Experience" href="#experience" />
       <SectionShortcut text="Projects" href="#projects" />
+      <ThemeToggle />
     </div>
   </div>
 </nav>

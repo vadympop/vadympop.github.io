@@ -1,0 +1,19 @@
+---
+interface Props {
+  id: string;
+  title: string;
+  /** Small muted index shown before the title, e.g. "01" */
+  index?: string;
+  class?: string;
+}
+
+const { id, title, index, class: className } = Astro.props;
+---
+
+<section id={id} aria-labelledby={`${id}-title`} class:list={["scroll-mt-8 py-20 sm:py-28", className]}>
+  <header class="mb-10 sm:mb-14 flex items-baseline gap-4">
+    {index && <span class="text-text-muted text-lg sm:text-2xl tabular-nums">{index}</span>}
+    <h2 id={`${id}-title`} class="skranji-regular text-4xl sm:text-6xl">{title}</h2>
+  </header>
+  <slot />
+</section>

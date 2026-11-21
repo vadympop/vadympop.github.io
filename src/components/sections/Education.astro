@@ -1,0 +1,27 @@
+---
+import Section from "../Section.astro";
+import { EDUCATION } from "../../data/education";
+import { formatPeriod } from "../../lib/format";
+---
+
+<Section id="education" title="Education" index="06">
+  <ul class="space-y-10">
+    {
+      EDUCATION.map((edu) => (
+        <li class="grid gap-x-10 gap-y-2 md:grid-cols-[13rem_1fr]">
+          <p class="text-lg md:pt-1.5">{formatPeriod(edu.period)}</p>
+          <div>
+            <h3 class="text-2xl sm:text-3xl">{edu.degree}</h3>
+            <p class="mt-1 text-lg sm:text-xl font-light">{edu.school}</p>
+            <p class="text-lg text-text-muted">{edu.faculty}</p>
+            <ul class="mt-3 text-lg font-light">
+              {edu.highlights.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

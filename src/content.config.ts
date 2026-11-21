@@ -15,17 +15,17 @@ const period = z.object({
 
 const credit = z.object({
   name: z.string(),
-  github: z.string().url().optional(),
+  github: z.url().optional(),
 });
 
 const links = z
   .object({
-    repo: z.string().url().optional(),
-    repos: z.array(z.object({ label: z.string(), url: z.string().url() })).optional(),
-    org: z.string().url().optional(),
-    site: z.string().url().optional(),
-    pypi: z.string().url().optional(),
-    profile: z.string().url().optional(),
+    repo: z.url().optional(),
+    repos: z.array(z.object({ label: z.string(), url: z.url() })).optional(),
+    org: z.url().optional(),
+    site: z.url().optional(),
+    pypi: z.url().optional(),
+    profile: z.url().optional(),
   })
   .default({});
 
@@ -35,7 +35,7 @@ const experience = defineCollection({
   schema: z.object({
     role: z.string(),
     company: z.string(),
-    companyUrl: z.string().url().optional(),
+    companyUrl: z.url().optional(),
     location: z.string(),
     employment: z.string(),
     period,

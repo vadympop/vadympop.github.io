@@ -1,0 +1,36 @@
+---
+import Icon from "./Icon.astro";
+---
+
+<button
+  type="button"
+  class="theme-toggle grid place-items-center text-text-muted transition-colors hover:text-black dark:hover:text-white cursor-pointer"
+  aria-label="Toggle dark mode"
+  title="Toggle dark mode"
+>
+  <Icon name="mdi:weather-night" size={24} class="col-start-1 row-start-1 dark:hidden" />
+  <Icon name="mdi:white-balance-sunny" size={24} class="col-start-1 row-start-1 hidden dark:block" />
+</button>
+
+<script>
+  const root = document.documentElement;
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>(".theme-toggle")) {
+    const sync = () => button.setAttribute("aria-pressed", String(root.dataset.theme === "dark"));
+    sync();
+    new MutationObserver(sync).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+
+    button.addEventListener("click", () => {
+      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      try {
+        // Picking the system theme again goes back to following the system
+        if (next === (media.matches ? "dark" : "light")) localStorage.removeItem("theme");
+        else localStorage.setItem("theme", next);
+      } catch {
+        /* storage unavailable: the choice lasts for this page view */
+      }
+    });
+  }
+</script>

@@ -1,0 +1,30 @@
+---
+import Section from "../Section.astro";
+import { PROFILE } from "../../data/profile";
+---
+
+<Section id="about" title="About" index="01">
+  <div class="grid gap-12 lg:grid-cols-[3fr_2fr] lg:gap-20">
+    <div class="space-y-5 text-xl sm:text-2xl font-light leading-relaxed max-w-3xl">
+      {PROFILE.about.map((paragraph) => <p>{paragraph}</p>)}
+      <p class="flex items-center gap-3 text-lg sm:text-xl font-normal">
+        <span class="relative flex size-2.5" aria-hidden="true">
+          <span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-60 motion-reduce:hidden"></span>
+          <span class="relative inline-flex size-2.5 rounded-full bg-emerald-500"></span>
+        </span>
+        {PROFILE.availability}
+      </p>
+    </div>
+
+    <dl class="grid grid-cols-2 gap-x-6 gap-y-10 self-start">
+      {
+        PROFILE.facts.map((fact) => (
+          <div class="flex flex-col border-t border-text-muted/50 pt-4">
+            <dt class="text-text-muted text-base sm:text-lg leading-snug">{fact.label}</dt>
+            <dd class="skranji-regular text-4xl sm:text-5xl -order-1">{fact.value}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</Section>

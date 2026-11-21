@@ -1,0 +1,75 @@
+---
+import { getCollection } from "astro:content";
+import Section from "../Section.astro";
+import StackList from "../StackList.astro";
+import ProjectLinks from "../ProjectLinks.astro";
+import Credits from "../Credits.astro";
+import { formatPeriod, PROJECT_KIND_LABELS } from "../../lib/format";
+
+const all = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+const featured = all.filter((p) => p.data.featured);
+const more = all.filter((p) => !p.data.featured);
+---
+
+<Section id="projects" title="Projects" index="03">
+  <ul class="grid gap-6 lg:grid-cols-2">
+    {
+      featured.map(({ id, data }) => (
+        <li id={`project-${id}`} class="project-card scroll-mt-8 group relative flex flex-col gap-5 border border-text-muted/50 p-6 sm:p-8 transition-colors hover:border-text">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-text-muted">
+            <span class="uppercase tracking-widest text-sm">{PROJECT_KIND_LABELS[data.kind]}</span>
+            <span>{formatPeriod(data.period)}</span>
+          </div>
+
+          <div>
+            <h3 class="skranji-regular text-3xl sm:text-4xl">{data.title}</h3>
+            <p class="mt-2 text-lg sm:text-xl font-light">{data.tagline}</p>
+            {data.role && <p class="mt-2 text-base text-text-muted">Role: {data.role}</p>}
+          </div>
+
+          <ul class="space-y-1.5 text-lg font-light">
+            {data.highlights.map((item) => (
+              <li class="relative pl-6 before:absolute before:left-0 before:top-[0.85em] before:h-px before:w-3 before:bg-text-muted">
+                {item}
+              </li>
+            ))}
+          </ul>
+
+          <div class="mt-auto space-y-4">
+            <StackList items={data.stack} size="sm" />
+            <Credits team={data.team} org={data.links.org} />
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <ProjectLinks links={data.links} title={data.title} />
+              {data.caseStudy && (
+                <a href={`/projects/${id}/`} class="text-lg">
+                  Case study →
+                </a>
+              )}
+            </div>
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h3 class="mt-20 mb-8 skranji-regular text-2xl sm:text-4xl">More projects</h3>
+  <ul class="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      more.map(({ id, data }) => (
+        <li id={`project-${id}`} class="scroll-mt-8 flex flex-col gap-3 border-t border-text-muted/50 pt-5">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-3 text-text-muted text-sm">
+            <span class="uppercase tracking-widest">{PROJECT_KIND_LABELS[data.kind]}</span>
+            <span>{formatPeriod(data.period)}</span>
+          </div>
+          <h4 class="text-2xl">{data.title}</h4>
+          <p class="text-lg font-light">{data.tagline}</p>
+          <p class="text-sm text-text-muted">{data.stack.join(" · ")}</p>
+          <div class="mt-auto space-y-2 pt-1">
+            <Credits team={data.team} org={data.links.org} />
+            <ProjectLinks links={data.links} title={data.title} />
+          </div>
+        </li>
+      ))
+    }
+  </ul>
+</Section>

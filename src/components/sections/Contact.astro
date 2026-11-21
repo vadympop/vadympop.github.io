@@ -1,0 +1,34 @@
+---
+import Section from "../Section.astro";
+import CVButton from "../CVButton.astro";
+import Icon from "../Icon.astro";
+import { CONTACTS, FREELANCEHUNT_URL, PROFILE } from "../../data/profile";
+
+const links = [...CONTACTS.filter((c) => c.name !== "Email"), { name: "Freelancehunt", link: FREELANCEHUNT_URL, icon: "mdi:briefcase-outline" }];
+---
+
+<Section id="contact" title="Contact" index="07" class="pb-12 sm:pb-16">
+  <p class="skranji-regular text-3xl sm:text-5xl max-w-4xl leading-tight">Have a backend to build or a team to join? Let's talk.</p>
+  <a href={`mailto:${PROFILE.email}`} class="mt-8 inline-block text-2xl sm:text-4xl break-all">{PROFILE.email}</a>
+
+  <div class="mt-10 flex flex-wrap items-center gap-x-10 gap-y-6">
+    <ul class="flex flex-wrap gap-x-8 gap-y-3">
+      {
+        links.map((contact) => (
+          <li>
+            <a href={contact.link} target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-xl">
+              <Icon name={contact.icon} size={24} />
+              {contact.name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <CVButton />
+  </div>
+
+  <footer class="mt-24 flex flex-wrap justify-between gap-4 border-t border-text-muted/50 pt-6 text-text-muted">
+    <p>© {new Date().getFullYear()} {PROFILE.fullName}</p>
+    <p>Bratislava, Slovakia</p>
+  </footer>
+</Section>

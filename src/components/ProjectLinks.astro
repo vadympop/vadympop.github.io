@@ -1,0 +1,38 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  links: {
+    repo?: string;
+    repos?: { label: string; url: string }[];
+    org?: string;
+    site?: string;
+    pypi?: string;
+  };
+  title: string;
+}
+
+const { links, title } = Astro.props;
+
+const items = [
+  ...(links.repo ? [{ label: "GitHub", url: links.repo, icon: "mdi:github" }] : []),
+  ...(links.repos ?? []).map((repo) => ({ label: repo.label, url: repo.url, icon: "mdi:github" })),
+  ...(links.pypi ? [{ label: "PyPI", url: links.pypi, icon: "mdi:language-python" }] : []),
+  ...(links.site ? [{ label: "Website", url: links.site, icon: "mdi:open-in-new" }] : []),
+];
+---
+
+{
+  items.length > 0 && (
+    <ul class="flex flex-wrap gap-x-5 gap-y-2" aria-label={`${title} links`}>
+      {items.map((item) => (
+        <li>
+          <a href={item.url} target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-base">
+            <Icon name={item.icon} size={18} />
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}

@@ -1,0 +1,41 @@
+---
+interface Props {
+  team?: { size: number; credits: { name: string; github?: string }[] };
+  org?: string;
+}
+
+const { team, org } = Astro.props;
+---
+
+{
+  team && (
+    <p class="text-base text-text-muted">
+      {team.credits.length > 0 ? (
+        <>
+          Built with{" "}
+          {team.credits.map((credit, i) => (
+            <>
+              {i > 0 && ", "}
+              {credit.github ? (
+                <a href={credit.github} target="_blank" rel="noopener" class="text-text">
+                  {credit.name}
+                </a>
+              ) : (
+                <span class="text-text">{credit.name}</span>
+              )}
+            </>
+          ))}
+        </>
+      ) : org ? (
+        <>
+          Team of {team.size} ·{" "}
+          <a href={org} target="_blank" rel="noopener" class="text-text">
+            GitHub org
+          </a>
+        </>
+      ) : (
+        <>Team of {team.size}</>
+      )}
+    </p>
+  )
+}
