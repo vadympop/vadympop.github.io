@@ -81,31 +81,36 @@ body {
   height: 100dvh;
 }
 
-/* Link underline that grows from the left on hover */
-a {
-  position: relative;
-  transition: color 0.2s;
-}
+/*
+ * Link underline that grows from the left on hover.
+ * In the base layer so utilities (hover colors, after:hidden on button-like links) can override it.
+ */
+@layer base {
+  a {
+    position: relative;
+    transition: color 0.2s;
+  }
 
-a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -2px;
-  width: 100%;
-  height: 0.1em;
-  background-color: var(--link-color);
+  a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 0.1em;
+    background-color: var(--link-color);
 
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.2s ease;
-}
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.2s ease;
+  }
 
-a:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
+  a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
 
-a:hover {
-  color: var(--link-color);
+  a:hover {
+    color: var(--link-color);
+  }
 }
