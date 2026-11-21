@@ -1,5 +1,27 @@
-# Vue 3 + TypeScript + Vite
+# vadym.work
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Personal portfolio of Vadym Popovych, Python backend developer.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+Built with [Astro](https://astro.build) (static output) and Tailwind CSS v4. Deployed to GitHub Pages at
+[vadym.work](https://vadym.work).
+
+## Development
+
+```bash
+npm install
+npm run dev       # http://localhost:4321
+npm run build     # type-check (astro check) + static build into dist/
+npm run preview   # serve dist/
+```
+
+## Structure
+
+```
+src/
+  components/   UI pieces (.astro), icons are inlined at build time (Icon.astro)
+  data/         profile, contacts and other site data
+  layouts/      page shell: <head>, theme bootstrap
+  pages/        routes
+  styles/       global CSS and theme tokens
+public/         static files served as-is (CV, favicons, manifest)
+```
