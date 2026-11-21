@@ -10,11 +10,14 @@ import Skills from "../components/sections/Skills.astro";
 import Education from "../components/sections/Education.astro";
 import Contact from "../components/sections/Contact.astro";
 import { PROFILE } from "../data/profile";
+import { homeStructuredData } from "../lib/structured-data";
 ---
 
 <BaseLayout
   title={`${PROFILE.fullName} · ${PROFILE.position} in Bratislava`}
-  description="Vadym Popovych is a Python backend developer in Bratislava with 3+ years of commercial experience building FastAPI services, real-time systems and payment integrations."
+  description="Python backend developer in Bratislava with 3+ years of commercial experience: FastAPI services, real-time systems and payment integrations."
+  ogType="profile"
+  jsonLd={homeStructuredData()}
 >
   <main>
     <div class="relative sm:px-15 px-5">

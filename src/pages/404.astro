@@ -1,0 +1,25 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import { PROFILE } from "../data/profile";
+---
+
+<BaseLayout title={`Page not found · ${PROFILE.fullName}`} description="This page doesn't exist." noindex>
+  <SiteHeader />
+  <main class="sm:px-15 px-5">
+    <div class="mx-auto flex min-h-[60dvh] max-w-4xl flex-col justify-center py-20">
+      <p class="skranji-regular text-8xl sm:text-9xl">404</p>
+      <h1 class="mt-4 text-3xl sm:text-4xl">This page doesn't exist.</h1>
+      <p class="mt-3 text-xl font-light text-text-muted">It may have moved, or the link has a typo.</p>
+      <div class="mt-10 flex flex-wrap gap-x-10 gap-y-4 text-xl">
+        <a href="/">← Home</a>
+        <a href="/#projects">Projects</a>
+        <a href="/#experience">Experience</a>
+      </div>
+    </div>
+    <div class="mx-auto max-w-4xl pb-12 sm:pb-16">
+      <SiteFooter />
+    </div>
+  </main>
+</BaseLayout>

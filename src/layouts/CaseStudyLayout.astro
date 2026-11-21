@@ -22,7 +22,7 @@ const { metaTitle, description, eyebrow, title, tagline, period, facts, stack, b
 const { prev, next } = await getNeighbours(Astro.url.pathname);
 ---
 
-<BaseLayout title={metaTitle} {description}>
+<BaseLayout title={metaTitle} {description} ogType="article" noindex>
   <SiteHeader />
   <main class="sm:px-15 px-5">
     <article class="mx-auto max-w-4xl pt-10 sm:pt-16">
