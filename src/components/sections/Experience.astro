@@ -26,6 +26,7 @@ const roles = (await getCollection("experience", ({ data }) => !data.parent)).so
               aria-hidden="true"
             />
             <div class:list={[data.featured && "featured-card max-w-4xl p-6 sm:p-8"]}>
+              {data.featured && <span class="featured-border" aria-hidden="true" />}
               <h3 class="text-2xl sm:text-3xl">
                 {data.role}{" "}
                 <span class="text-text-muted">

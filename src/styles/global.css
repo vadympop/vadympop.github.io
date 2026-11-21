@@ -374,46 +374,83 @@ html.theme-transition::view-transition-new(root) {
   }
 }
 
-/* Featured experience (Hypefood): a light that travels around the border, plus a soft glow */
-@property --glow-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
+/* Featured experience (Hypefood): a light that travels around the border, plus a soft glow.
+ * Both effects animate only transform/opacity so they run on the compositor. Animating the gradient
+ * angle or the box-shadow itself would repaint the card on the main thread every frame. */
 @keyframes glow-spin {
   to {
-    --glow-angle: 360deg;
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 
 @keyframes glow-breathe {
   0%,
   100% {
-    box-shadow: 0 0 28px -12px color-mix(in oklab, var(--color-text) 35%, transparent);
+    opacity: 0.55;
   }
   50% {
-    box-shadow: 0 0 48px -10px color-mix(in oklab, var(--color-text) 55%, transparent);
+    opacity: 1;
   }
 }
 
 .featured-card {
   --edge: color-mix(in oklab, var(--color-text) 22%, transparent);
+  position: relative;
+  isolation: isolate;
   border: 1px solid transparent;
-  background:
-    linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
-    conic-gradient(
-        from var(--glow-angle),
-        var(--edge) 0deg,
-        var(--edge) 210deg,
-        var(--color-text) 270deg,
-        var(--edge) 330deg,
-        var(--edge) 360deg
-      )
-      border-box;
-  animation:
-    glow-spin 7s linear infinite,
-    glow-breathe 4s ease-in-out infinite;
+}
+
+/* Glow: a static shadow whose opacity breathes */
+.featured-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -2;
+  pointer-events: none;
+  box-shadow: 0 0 48px -10px color-mix(in oklab, var(--color-text) 55%, transparent);
+  animation: glow-breathe 4s ease-in-out infinite;
+}
+
+/* Border: a clipped frame with a rotating conic gradient behind a solid fill inset by 1px */
+.featured-border {
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  container-type: size;
+}
+
+.featured-border::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  /* a square at least as large as the card's diagonal (w + h >= diagonal), so the corners stay covered while it spins */
+  width: calc(100cqw + 100cqh);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(
+    var(--edge) 0deg,
+    var(--edge) 210deg,
+    var(--color-text) 270deg,
+    var(--edge) 330deg,
+    var(--edge) 360deg
+  );
+  animation: glow-spin 7s linear infinite;
+}
+
+.featured-border::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  background-color: var(--color-bg);
+}
+
+/* Paused while scrolled out of view (toggled in effects.ts) */
+.featured-card[data-offscreen]::after,
+.featured-card[data-offscreen] .featured-border::before {
+  animation-play-state: paused;
 }
 
 .featured-dot {
@@ -423,8 +460,12 @@ html.theme-transition::view-transition-new(root) {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .featured-card {
+  .featured-card::after,
+  .featured-border::before {
     animation: none;
-    box-shadow: 0 0 36px -12px color-mix(in oklab, var(--color-text) 40%, transparent);
+  }
+
+  .featured-card::after {
+    opacity: 0.7;
   }
 }

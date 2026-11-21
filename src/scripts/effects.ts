@@ -107,7 +107,17 @@ function initStickyHeader() {
   }).observe(heroNav);
 }
 
+/* Featured card: pause its looping border/glow animations while it is off-screen */
+function initFeaturedPause() {
+  if (reduceMotion || !("IntersectionObserver" in window)) return;
+  const observer = new IntersectionObserver((entries) => {
+    for (const entry of entries) entry.target.toggleAttribute("data-offscreen", !entry.isIntersecting);
+  });
+  document.querySelectorAll(".featured-card").forEach((el) => observer.observe(el));
+}
+
 initReveal();
 initCounters();
 initPointerEffects();
 initStickyHeader();
+initFeaturedPause();
