@@ -1,0 +1,137 @@
+---
+title: Hypefood
+tagline: The backend of a multi-location food delivery platform, from the first release to 500+ daily orders.
+description: >-
+  Case study: the FastAPI backend behind Hypefood, a food delivery franchise. City menus, a discount engine, delivery
+  zones, a real-time call center on WebSocket and RabbitMQ, POS, Glovo, payment and fiscal integrations, CI/CD to AWS.
+role: Backend Developer
+company: Hypefood
+location: Remote, Ukraine
+employment: Full-time
+period:
+  start: "2022-12"
+  end: "2025-01"
+stack: [FastAPI, PostgreSQL, Redis, RabbitMQ, WebSocket, Docker, AWS, GitHub Actions, ELK]
+summary: >-
+  Food delivery platform for a multi-location franchise. I designed and built the core backend
+  in the product team from the first release.
+highlights:
+  - Designed and built the core backend of a food delivery platform handling 500+ daily orders across multiple franchise locations.
+  - Built a real-time call center with a live order and call feed for operators over WebSocket, with RabbitMQ distributing events across app instances.
+  - Integrated payments (LiqPay), fiscalization (Checkbox), POS (Syrve) and Glovo, plus loyalty cards, gift certificates and promo codes at checkout.
+  - Reduced API response times by ~40% with a Redis caching layer for menu and pricing.
+  - Set up full CI/CD with GitHub Actions, deploying Docker containers to AWS EC2/ECS.
+  - Built a pluggable cart and promotion engine and delivery zones as geo-polygons.
+order: 2
+caseStudy: true
+---
+
+import Diagram from "../../components/Diagram.astro";
+import HypefoodArchitecture from "../../components/diagrams/HypefoodArchitecture.astro";
+
+## Context
+
+Hypefood is a food delivery brand that runs as a franchise across several cities. Each location has its own
+kitchen, POS system, menu and prices. Orders come from three places: customers on the website and app, operators
+taking phone orders in the call center, and the Glovo marketplace. All of them have to end up in the right kitchen,
+paid and fiscalized.
+
+I joined the product team for the first release as the backend developer and designed the core of the platform.
+Over two years it grew to more than 500 orders a day across franchise locations. The backend covered everything
+from the customer's cart to the back office.
+
+## What I built
+
+### Ordering
+
+- **Menus per city and store**, synced on a schedule from the Syrve POS, with tags, modifiers and per-location
+  prices. Menu images are processed with libvips and served from S3 through CloudFront.
+- **A server-side cart with a pluggable discount engine.** Each promotion type (coupons, percentage discounts,
+  free items, time-limited offers, promo codes) is a separate processor with its own validation. Loyalty cards
+  and gift certificates are applied at checkout too.
+- **Delivery zones as geo-polygons.** The customer's address is geocoded with Google Maps, and a point-in-polygon
+  check picks the store that delivers there. Stores can also be closed temporarily.
+- **Order flow to the kitchen:** orders go to the store's POS, receipts are fiscalized through Checkbox, and Glovo
+  orders and menus are kept in sync.
+
+### Real-time call center
+
+- A live feed for operators over WebSocket: incoming, answered, ended and missed calls from telephony webhooks,
+  order drafts being built during a call, new orders, and customers to call back after a missed call.
+- Events travel through a **RabbitMQ topic exchange**, so every app instance can serve operator connections.
+
+### Payments and back office
+
+- Online payments with LiqPay, plus bank integrations for back-office payments and payouts, confirmed with
+  one-time codes over WebSocket.
+- Marketing tools: phone number pools and SMS campaigns.
+- Admin endpoints for menus, banners, promo codes, orders and Glovo settings, plus employees, positions, shifts and
+  fuel cards for couriers.
+
+### Platform
+
+- A **Redis caching layer** for menus, pricing and city data, invalidated when staff edit them. It cut API
+  response times by about 40%.
+- Around ten groups of scheduled jobs: POS menu sync, fiscal receipts, Glovo, payments and payouts, customer
+  statuses, cart cleanup.
+- **CI/CD with GitHub Actions**, deploying Docker containers to AWS EC2 and ECS.
+- Structured logging with correlation IDs, shipped to ELK.
+- A team workflow with feature branches, more than 125 merged pull requests, Alembic migrations, pre-commit with
+  Ruff and a dockerized test environment.
+
+## Architecture
+
+<Diagram caption="Hypefood: one backend for customers, operators and staff, with RabbitMQ for live call-center events.">
+  <HypefoodArchitecture />
+</Diagram>
+
+One FastAPI backend serves all three audiences. Customers use REST. Operators keep a WebSocket open for the live
+feed. Staff use the admin and back-office endpoints. External systems talk to the backend in both directions: it
+calls the POS, payment, fiscal and maps APIs, and receives webhooks from payments, telephony, Glovo and the POS.
+
+Reads that every customer makes, like city menus and prices, are served from Redis. Anything that changes the
+state of a call or an order is published to RabbitMQ, and each instance forwards it to the operators connected to
+it. Scheduled jobs run next to the API and keep the POS, Glovo and fiscal data in sync.
+
+## Key decisions
+
+### RabbitMQ for call-center events
+
+WebSocket connections live on whichever instance the operator happened to connect to. Events, on the other hand,
+start wherever a webhook or request lands. Every instance therefore declares its own auto-delete queue on a topic
+exchange and binds it to the event families it needs (`calls.#`, `orders.#`, `drafts.#`, `customers.#`). An event
+published once reaches every operator on every instance, and routing keys like `calls.lost.{id}` let each consumer
+subscribe to exactly what it cares about.
+
+### Discounts as pluggable processors
+
+The business kept adding new kinds of promotions. A chain of `if` statements in checkout wouldn't have survived
+that. Each discount type is a processor with two methods: `validate()` returns cart errors, and
+`process_cart()` applies the discount. The cart runs them in order. A promotion that stops being valid, say an
+item was removed, is dropped with a clear error instead of failing the whole checkout. Adding a promotion type
+means adding one class.
+
+### Store selection by geometry
+
+Which store delivers to an address isn't a property of the address. It's a property of each store's delivery
+area. Zones are stored as polygons, and choosing a store is a geometric test. Changing an area is a data change in
+the admin panel, not a code change.
+
+### Cache what everyone reads, invalidate on write
+
+Menus and prices are read by every visitor and changed by staff a few times a day, the ideal case for caching.
+Responses are cached in Redis with a TTL, and the relevant namespace is cleared as soon as an admin edits a menu,
+so edits show up right away while most reads never touch PostgreSQL.
+
+### One request ID through every log line
+
+A single order touches the cart, payment provider, POS, fiscal service and call center. Every request gets a
+correlation ID that appears in all its structured log lines in ELK. Debugging an order means searching for one
+ID, not reconstructing a timeline across services.
+
+## Results
+
+- 500+ orders a day across multiple franchise locations.
+- About 40% faster API responses after introducing the Redis cache.
+- A call center, aggregator integration and back office running on the same backend as customer ordering.
+- Automated delivery from pull request to AWS with GitHub Actions.

@@ -1,0 +1,91 @@
+<svg viewBox="0 0 960 520" role="img" aria-labelledby="hypefood-diagram-title">
+  <title id="hypefood-diagram-title">
+    Hypefood architecture: customers, call-center operators and staff use one FastAPI backend. It stores data in PostgreSQL,
+    caches menus in Redis, distributes call-center events through a RabbitMQ topic exchange, runs scheduled jobs and
+    integrates with the POS, Glovo, payments, fiscalization, telephony and maps. Logs go to ELK.
+  </title>
+  <defs>
+    <marker id="hypefood-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+    </marker>
+  </defs>
+
+  <!-- Clients -->
+  <rect class="d-box" x="20" y="30" width="180" height="76" rx="2"></rect>
+  <text class="d-title" x="110" y="62" text-anchor="middle">Customers</text>
+  <text class="d-text" x="110" y="85" text-anchor="middle">website · app</text>
+
+  <rect class="d-box" x="20" y="140" width="180" height="76" rx="2"></rect>
+  <text class="d-title" x="110" y="172" text-anchor="middle">Call center</text>
+  <text class="d-text" x="110" y="195" text-anchor="middle">operators</text>
+
+  <rect class="d-box" x="20" y="250" width="180" height="76" rx="2"></rect>
+  <text class="d-title" x="110" y="282" text-anchor="middle">Staff</text>
+  <text class="d-text" x="110" y="305" text-anchor="middle">admin · back office</text>
+
+  <rect class="d-box" x="20" y="360" width="180" height="76" rx="2"></rect>
+  <text class="d-title" x="110" y="392" text-anchor="middle">Scheduled jobs</text>
+  <text class="d-text" x="110" y="415" text-anchor="middle">~10 job groups</text>
+
+  <!-- API -->
+  <rect class="d-box" x="270" y="30" width="290" height="370" rx="2"></rect>
+  <text class="d-title" x="415" y="62" text-anchor="middle">FastAPI backend</text>
+  <text class="d-text" x="415" y="98" text-anchor="middle">city menus · cart · discount engine</text>
+  <text class="d-text" x="415" y="124" text-anchor="middle">orders · delivery zones</text>
+  <text class="d-text" x="415" y="150" text-anchor="middle">call center over WebSocket</text>
+  <text class="d-text" x="415" y="176" text-anchor="middle">payments · fiscal receipts</text>
+  <text class="d-text" x="415" y="202" text-anchor="middle">loyalty · gift certificates</text>
+  <text class="d-text" x="415" y="228" text-anchor="middle">marketing · SMS campaigns</text>
+  <text class="d-text" x="415" y="254" text-anchor="middle">employees · shifts · admin</text>
+  <text class="d-text" x="415" y="300" text-anchor="middle">Docker on AWS EC2 / ECS</text>
+  <text class="d-text" x="415" y="326" text-anchor="middle">CI/CD with GitHub Actions</text>
+
+  <!-- Event bus -->
+  <rect class="d-box" x="270" y="440" width="290" height="66" rx="2"></rect>
+  <text class="d-title" x="415" y="468" text-anchor="middle">RabbitMQ topic exchange</text>
+  <text class="d-text" x="415" y="490" text-anchor="middle">calls.* · orders.* · drafts.* · customers.*</text>
+
+  <!-- Right column -->
+  <rect class="d-box" x="630" y="30" width="310" height="210" rx="2"></rect>
+  <text class="d-title" x="785" y="62" text-anchor="middle">Integrations</text>
+  <text class="d-text" x="785" y="94" text-anchor="middle">Syrve POS · Glovo</text>
+  <text class="d-text" x="785" y="120" text-anchor="middle">LiqPay · banks</text>
+  <text class="d-text" x="785" y="146" text-anchor="middle">Checkbox fiscalization</text>
+  <text class="d-text" x="785" y="172" text-anchor="middle">telephony webhooks · SMS</text>
+  <text class="d-text" x="785" y="198" text-anchor="middle">Google Maps · AWS S3</text>
+
+  <rect class="d-box" x="630" y="262" width="310" height="52" rx="2"></rect>
+  <text class="d-title" x="785" y="294" text-anchor="middle">PostgreSQL</text>
+
+  <rect class="d-box" x="630" y="334" width="310" height="52" rx="2"></rect>
+  <text class="d-title" x="725" y="366" text-anchor="middle">Redis</text>
+  <text class="d-text" x="840" y="366" text-anchor="middle">menu · pricing cache</text>
+
+  <rect class="d-box" x="630" y="440" width="310" height="66" rx="2"></rect>
+  <text class="d-title" x="785" y="468" text-anchor="middle">ELK</text>
+  <text class="d-text" x="785" y="490" text-anchor="middle">structured logs · correlation IDs</text>
+
+  <!-- Edges -->
+  <path class="d-edge" d="M200 68 H270" marker-end="url(#hypefood-arrow)"></path>
+  <text class="d-label" x="235" y="60" text-anchor="middle">REST</text>
+
+  <path class="d-edge" d="M200 178 H270" marker-start="url(#hypefood-arrow)" marker-end="url(#hypefood-arrow)"></path>
+  <text class="d-label" x="235" y="170" text-anchor="middle">WS</text>
+
+  <path class="d-edge" d="M200 288 H270" marker-end="url(#hypefood-arrow)"></path>
+  <text class="d-label" x="235" y="280" text-anchor="middle">REST</text>
+
+  <path class="d-edge" d="M200 380 H270" marker-end="url(#hypefood-arrow)"></path>
+
+  <path class="d-edge" d="M560 135 H630" marker-start="url(#hypefood-arrow)" marker-end="url(#hypefood-arrow)"></path>
+  <text class="d-label" x="595" y="127" text-anchor="middle">calls</text>
+  <text class="d-label" x="595" y="155" text-anchor="middle">webhooks</text>
+
+  <path class="d-edge" d="M560 288 H630" marker-end="url(#hypefood-arrow)"></path>
+  <path class="d-edge" d="M560 360 H630" marker-end="url(#hypefood-arrow)"></path>
+
+  <path class="d-edge" d="M415 400 V440" marker-start="url(#hypefood-arrow)" marker-end="url(#hypefood-arrow)"></path>
+  <text class="d-label" x="490" y="425" text-anchor="middle">publish · consume</text>
+
+  <path class="d-edge" d="M560 385 H595 V473 H630" marker-end="url(#hypefood-arrow)"></path>
+</svg>
