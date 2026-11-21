@@ -1,0 +1,69 @@
+---
+import Icon from "./Icon.astro";
+import { CONTACTS } from "../data/profile";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<div class:list={["contacts-menu group relative text-left", className]}>
+  <button
+    type="button"
+    class="contacts-menu__trigger text-lg flex items-center sm:text-2xl transition-colors text-text-muted hover:text-black dark:hover:text-white! cursor-pointer"
+    aria-expanded="false"
+    aria-controls="contacts-menu-panel"
+  >
+    Contacts
+    <Icon class="transition-transform group-data-open:rotate-180" size={24} name="mdi-light:chevron-up" />
+  </button>
+
+  <div
+    id="contacts-menu-panel"
+    class="contacts-menu__panel absolute rounded-xs inset-shadow-sm z-10 -top-15 p-1 origin-bottom-right bg-black dark:bg-white invisible opacity-0 scale-95 transition duration-75 ease-in group-data-open:visible group-data-open:opacity-100 group-data-open:scale-100 group-data-open:duration-100 group-data-open:ease-out"
+  >
+    <div class="py-1 px-2 flex space-x-2 text-white dark:text-black">
+      {
+        CONTACTS.map((contact) => {
+          const external = contact.link.startsWith("http");
+          return (
+            <a
+              href={contact.link}
+              aria-label={contact.name}
+              target={external ? "_blank" : undefined}
+              rel={external ? "noopener" : undefined}
+            >
+              <Icon size={34} name={contact.icon} />
+            </a>
+          );
+        })
+      }
+    </div>
+  </div>
+</div>
+
+<script>
+  for (const menu of document.querySelectorAll<HTMLElement>(".contacts-menu")) {
+    const trigger = menu.querySelector<HTMLButtonElement>(".contacts-menu__trigger")!;
+
+    const setOpen = (open: boolean) => {
+      menu.toggleAttribute("data-open", open);
+      trigger.setAttribute("aria-expanded", String(open));
+    };
+
+    trigger.addEventListener("click", () => setOpen(!menu.hasAttribute("data-open")));
+
+    document.addEventListener("click", (event) => {
+      if (!menu.contains(event.target as Node)) setOpen(false);
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && menu.hasAttribute("data-open")) {
+        setOpen(false);
+        trigger.focus();
+      }
+    });
+  }
+</script>

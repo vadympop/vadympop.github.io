@@ -1,0 +1,16 @@
+---
+import Icon from "./Icon.astro";
+
+interface Props {
+  text: string;
+  link: string;
+}
+
+const { text, link } = Astro.props;
+const external = link.startsWith("http");
+---
+
+<div class="relative">
+  <a href={link} class="text-2xl" target={external ? "_blank" : undefined} rel={external ? "noopener" : undefined}>{text}</a>
+  <Icon class="absolute -top-2 -right-4" size={24} color="var(--secondary-color)" name="mdi:cursor-default-click-outline" />
+</div>

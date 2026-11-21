@@ -1,0 +1,20 @@
+---
+import ContactLink from "./ContactLink.astro";
+import SectionShortcut from "./SectionShortcut.astro";
+import ContactsMenu from "./ContactsMenu.astro";
+import { CONTACTS } from "../data/profile";
+---
+
+<nav class="absolute bottom-0 left-0 w-screen sm:px-15 px-5" aria-label="Main">
+  <div class="py-4 sm:py-7 flex border-t border-(--secondary-color)">
+    <div class="sm:flex space-x-10 hidden">
+      {CONTACTS.map((contact) => <ContactLink text={contact.name} link={contact.link} />)}
+    </div>
+    <span class="max-sm:hidden grow"></span>
+    <div class="flex justify-between sm:space-x-12 w-100 sm:w-auto">
+      <ContactsMenu class="flex sm:hidden" />
+      <SectionShortcut text="Experience" href="#experience" />
+      <SectionShortcut text="Projects" href="#projects" />
+    </div>
+  </div>
+</nav>

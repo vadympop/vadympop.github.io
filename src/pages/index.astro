@@ -1,0 +1,18 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Hero from "../components/Hero.astro";
+import NavigationBar from "../components/NavigationBar.astro";
+import { PROFILE } from "../data/profile";
+---
+
+<BaseLayout
+  title={`${PROFILE.fullName} · ${PROFILE.position} in Bratislava`}
+  description="Vadym Popovych is a Python backend developer in Bratislava with 3+ years of commercial experience building FastAPI services, real-time systems and payment integrations."
+>
+  <main>
+    <div class="relative sm:px-15 px-5">
+      <Hero />
+      <NavigationBar />
+    </div>
+  </main>
+</BaseLayout>

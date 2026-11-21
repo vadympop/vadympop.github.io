@@ -1,0 +1,56 @@
+---
+import "@fontsource-variable/oswald";
+import "@fontsource/skranji/400.css";
+import "@fontsource/skranji/700.css";
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Apply the theme before first paint: saved choice, otherwise the system preference -->
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const media = window.matchMedia("(prefers-color-scheme: dark)");
+        const saved = () => {
+          try {
+            return localStorage.getItem("theme");
+          } catch {
+            return null;
+          }
+        };
+        const apply = () => {
+          const choice = saved();
+          root.dataset.theme = choice === "dark" || choice === "light" ? choice : media.matches ? "dark" : "light";
+        };
+        apply();
+        media.addEventListener("change", apply);
+        window.addEventListener("storage", apply);
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

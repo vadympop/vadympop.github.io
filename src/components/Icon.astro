@@ -1,0 +1,49 @@
+---
+/**
+ * Inline SVG icon rendered at build time from Iconify JSON sets (no runtime JS, no network requests).
+ * Usage: <Icon name="mdi:github" size={24} />
+ */
+import { getIconData, iconToSVG } from "@iconify/utils";
+import type { IconifyJSON } from "@iconify/types";
+import { icons as mdi } from "@iconify-json/mdi";
+import { icons as mdiLight } from "@iconify-json/mdi-light";
+
+const ICON_SETS: Record<string, IconifyJSON> = {
+  mdi,
+  "mdi-light": mdiLight,
+};
+
+interface Props {
+  /** "prefix:name", e.g. "mdi:github" */
+  name: string;
+  /** Height in px (width follows the icon's aspect ratio) */
+  size?: number;
+  class?: string;
+  color?: string;
+  /** Accessible label; when omitted the icon is decorative (aria-hidden) */
+  label?: string;
+}
+
+const { name, size = 24, class: className, color, label } = Astro.props;
+
+const [prefix, iconName] = name.split(":");
+const set = ICON_SETS[prefix];
+const data = set && iconName ? getIconData(set, iconName) : null;
+if (!data) {
+  throw new Error(`Icon "${name}" not found. Is its set registered in Icon.astro?`);
+}
+
+const { attributes, body } = iconToSVG(data, { height: String(size) });
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  {...attributes}
+  class={className}
+  style={color ? `color: ${color}` : undefined}
+  aria-hidden={label ? undefined : "true"}
+  role={label ? "img" : undefined}
+  aria-label={label}
+  focusable="false"
+  set:html={body}
+/>
