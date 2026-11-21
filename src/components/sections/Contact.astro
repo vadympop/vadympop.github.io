@@ -5,7 +5,7 @@ import Icon from "../Icon.astro";
 import SiteFooter from "../SiteFooter.astro";
 import { CONTACTS, FREELANCEHUNT_URL, PROFILE } from "../../data/profile";
 
-const links = [...CONTACTS.filter((c) => c.name !== "Email"), { name: "Freelancehunt", link: FREELANCEHUNT_URL, icon: "mdi:briefcase-outline" }];
+const links = [...CONTACTS.filter((c) => c.name !== "Email")];
 ---
 
 <Section id="contact" title="Contact" index="07" class="pb-12 sm:pb-16">
