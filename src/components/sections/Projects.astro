@@ -40,11 +40,6 @@ const more = all.filter((p) => !p.data.featured);
             <Credits team={data.team} org={data.links.org} />
             <div class="flex flex-wrap items-center justify-between gap-4">
               <ProjectLinks links={data.links} title={data.title} />
-              {data.caseStudy && (
-                <a href={`/projects/${id}/`} class="text-lg">
-                  Case study →
-                </a>
-              )}
             </div>
           </div>
         </li>
