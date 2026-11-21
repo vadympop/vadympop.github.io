@@ -59,6 +59,8 @@ const experience = defineCollection({
       )
       .default([]),
     stats: z.string().optional(),
+    /** Highlighted entry on the home page (glowing card) */
+    featured: z.boolean().default(false),
     quotes: z.array(z.string()).default([]),
     links,
     order: z.number(),

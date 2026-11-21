@@ -373,3 +373,58 @@ html.theme-transition::view-transition-new(root) {
     display: none;
   }
 }
+
+/* Featured experience (Hypefood): a light that travels around the border, plus a soft glow */
+@property --glow-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes glow-spin {
+  to {
+    --glow-angle: 360deg;
+  }
+}
+
+@keyframes glow-breathe {
+  0%,
+  100% {
+    box-shadow: 0 0 28px -12px color-mix(in oklab, var(--color-text) 35%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 48px -10px color-mix(in oklab, var(--color-text) 55%, transparent);
+  }
+}
+
+.featured-card {
+  --edge: color-mix(in oklab, var(--color-text) 22%, transparent);
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--color-bg), var(--color-bg)) padding-box,
+    conic-gradient(
+        from var(--glow-angle),
+        var(--edge) 0deg,
+        var(--edge) 210deg,
+        var(--color-text) 270deg,
+        var(--edge) 330deg,
+        var(--edge) 360deg
+      )
+      border-box;
+  animation:
+    glow-spin 7s linear infinite,
+    glow-breathe 4s ease-in-out infinite;
+}
+
+.featured-dot {
+  box-shadow:
+    0 0 0 4px var(--color-bg),
+    0 0 14px 3px color-mix(in oklab, var(--color-text) 60%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .featured-card {
+    animation: none;
+    box-shadow: 0 0 36px -12px color-mix(in oklab, var(--color-text) 40%, transparent);
+  }
+}
