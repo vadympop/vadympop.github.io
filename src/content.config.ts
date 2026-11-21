@@ -31,8 +31,11 @@ const links = z
 
 /** A body of Markdown in either collection becomes a case-study page once `caseStudy` is true. */
 const experience = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/experience" }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/experience" }),
   schema: z.object({
+    /** Display name for the case-study page (defaults to the company) */
+    title: z.string().optional(),
+    tagline: z.string().optional(),
     role: z.string(),
     company: z.string(),
     companyUrl: z.url().optional(),
@@ -60,13 +63,15 @@ const experience = defineCollection({
     links,
     order: z.number(),
     caseStudy: z.boolean().default(false),
+    /** Meta description for the case-study page */
+    description: z.string().optional(),
     /** For case-study-only entries that belong to another role (e.g. Oblik → Automation Aspects) */
     parent: z.string().optional(),
   }),
 });
 
 const projects = defineCollection({
-  loader: glob({ pattern: "**/*.md", base: "./src/content/projects" }),
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/projects" }),
   schema: z.object({
     title: z.string(),
     tagline: z.string(),
@@ -85,6 +90,8 @@ const projects = defineCollection({
     featured: z.boolean().default(false),
     order: z.number(),
     caseStudy: z.boolean().default(false),
+    /** Meta description for the case-study page */
+    description: z.string().optional(),
   }),
 });
 

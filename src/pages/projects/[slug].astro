@@ -1,0 +1,51 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, render } from "astro:content";
+import CaseStudyLayout from "../../layouts/CaseStudyLayout.astro";
+import ProjectLinks from "../../components/ProjectLinks.astro";
+import { formatPeriod, PROJECT_KIND_LABELS } from "../../lib/format";
+import { PROFILE } from "../../data/profile";
+
+export const getStaticPaths = (async () => {
+  const projects = await getCollection("projects", ({ data }) => data.caseStudy);
+  return projects.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+
+const escape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const facts = [
+  ...(data.role ? [{ label: "My role", value: escape(data.role) }] : []),
+  ...(data.team
+    ? [
+        {
+          label: "Team",
+          value:
+            data.team.credits.length > 0
+              ? `${data.team.size} people · with ${data.team.credits
+                  .map((c) => (c.github ? `<a href="${c.github}" target="_blank" rel="noopener">${escape(c.name)}</a>` : escape(c.name)))
+                  .join(", ")}`
+              : `${data.team.size} people`,
+        },
+      ]
+    : []),
+];
+---
+
+<CaseStudyLayout
+  metaTitle={`${data.title}: ${data.tagline.split(".")[0]} · ${PROFILE.fullName}`}
+  description={data.description ?? data.tagline}
+  eyebrow={PROJECT_KIND_LABELS[data.kind]}
+  title={data.title}
+  tagline={data.tagline}
+  period={formatPeriod(data.period)}
+  {facts}
+  stack={data.stack}
+  back={{ href: `/#project-${entry.id}`, label: "All projects" }}
+>
+  <ProjectLinks slot="links" links={data.links} title={data.title} />
+  <Content />
+</CaseStudyLayout>

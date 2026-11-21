@@ -1,0 +1,148 @@
+---
+title: Kupio
+tagline: Marketplace platform with a FastAPI backend and a Kotlin Multiplatform app for Android and iOS.
+description: >-
+  Case study: how a two-person team built Kupio, a marketplace with a FastAPI backend, Stripe-paid promotions,
+  WebSocket chat on Redis pub/sub and a Kotlin Multiplatform app for Android and iOS.
+period:
+  start: "2026-03"
+  end: "2026-05"
+kind: product
+team:
+  size: 2
+  credits:
+    - name: Yurii Oliinyk
+      github: https://github.com/yuriioliinyk4
+role: Backend architecture, co-developer of the mobile app
+stack: [Python, FastAPI, PostgreSQL, Redis, Stripe, WebSocket, Firebase FCM, AWS S3, Docker, Kotlin Multiplatform]
+highlights:
+  - Designed the backend architecture with domain modules, repository and service layers and a Unit of Work.
+  - Paid listing promotions via Stripe, with the promotion rank built into search sorting.
+  - Real-time chat over WebSocket + Redis pub/sub with read receipts, reconnect replay and FCM push notifications.
+  - "Mobile: chat, push notifications with deep links, search filters and Stripe payment screens."
+links:
+  repos:
+    - label: Backend
+      url: https://github.com/kupio-app/kupio-backend
+    - label: Mobile
+      url: https://github.com/kupio-app/kupio-mobile
+featured: true
+order: 1
+caseStudy: true
+---
+
+import Diagram from "../../components/Diagram.astro";
+import KupioArchitecture from "../../components/diagrams/KupioArchitecture.astro";
+
+## Context
+
+Kupio is a classifieds marketplace. People list things to sell or trade, browse categories with filters that
+fit each category, chat with sellers and pay to push their listings to the top. We built it as a team of two
+in about three months: a FastAPI backend and one Kotlin Multiplatform codebase for Android and iOS.
+
+I set up the backend architecture and built most of its business modules, and I co-developed the mobile app.
+Yurii built Google sign-in, listing search, favourites, image storage on S3, reports and statistics. We both
+wrote tests and worked through pull requests on both repositories.
+
+## What I built
+
+### Backend foundation
+
+- The project structure: 11 domain modules (auth, users, listings, categories, filter definitions,
+  favourites, chat, promotions, payments, images, reports). Each module has its own router, service, repository, schemas and exceptions.
+- A **Unit of Work** on top of async SQLAlchemy 2. A service opens a transaction with `async with uow:`.
+  It commits when the block finishes and rolls back on any exception.
+- Authentication with short-lived JWT access tokens and refresh tokens kept as hashed, revocable sessions in PostgreSQL.
+- A custom exception system that turns domain errors into consistent API error responses.
+
+### Catalog
+
+- Categories and **filter definitions**. Each category declares its own typed filters (text, number,
+  boolean, select or range), and listings are validated against them when created and edited.
+- Promotion rank built into listing search, for every sort order: newest, cheapest and most expensive.
+
+### Payments and promotions
+
+- An internal balance topped up through **Stripe Checkout**. Webhooks are signature-verified and processed idempotently.
+- Promotion packets (type, duration, price) bought from the balance. A scheduled job deactivates expired promotions every five minutes.
+
+### Real-time chat
+
+- A documented WebSocket protocol, shared with the mobile app: an auth handshake within 10 seconds,
+  typing indicators, read receipts, deletions and replay of missed messages after a reconnect.
+- One Redis pub/sub channel per conversation, so any API instance can deliver to any connected client.
+- Push notifications via Firebase Cloud Messaging, only when the recipient isn't already in the conversation.
+  A background worker sends them and removes device tokens that are no longer registered.
+
+### Mobile app
+
+- Chat over WebSocket, push notifications with deep links into the right screen, and background sync of
+  unread counts with local notifications.
+- Search with filters, favourites and a Saved screen, My Listings, Stripe payment screens, and Firebase Analytics and Crashlytics.
+
+## Architecture
+
+<Diagram caption="Kupio: request paths, real-time chat and push delivery.">
+  <KupioArchitecture />
+</Diagram>
+
+The app calls the REST API with a JWT. Requests go through routers and Pydantic schemas to services. Services own
+the transaction and call repositories, which are the only layer that builds SQL.
+
+Chat runs over a separate WebSocket connection. Its handler subscribes to the conversation's Redis channel and
+forwards every event to the client. Messages are written to PostgreSQL first, then published.
+
+Anything slow or outside our control runs in the background worker instead of the request path. That covers
+sending pushes to FCM and expiring promotions. The worker uses Redis as its task queue.
+
+## Key decisions
+
+### Transactions belong to the service layer
+
+Repositories only build queries. Services decide where a business operation starts and ends.
+Buying a promotion touches three tables: the user's balance, the ledger and the promotion itself. It runs
+inside one `async with uow:` block, so either all three change or none do.
+
+### The balance can't go negative
+
+The deduction is a single conditional update:
+
+```sql
+UPDATE users
+SET balance = balance - :price
+WHERE id = :user_id AND balance >= :price
+```
+
+If no row matches, the purchase fails with an insufficient-balance error. Two parallel purchases can't both pass the check, and
+there's no read-then-write gap to lock.
+
+### Stripe webhooks are idempotent
+
+Stripe can deliver the same event more than once. A payment session is credited only while it is still
+`PENDING`. Marking it completed, adding to the balance and writing the ledger entry commit together, so a
+redelivered event finds the session completed and does nothing.
+
+### Chat that survives reconnects and scales out
+
+WebSocket handlers never talk to each other directly. They all listen to Redis, so adding API instances
+doesn't change anything for clients. Mobile connections drop all the time, so on reconnect the client sends
+the ID of the last message it saw. The server replays everything newer from PostgreSQL before switching to
+live events.
+
+### Push only when it's useful
+
+While a user has the conversation open, the handler refreshes a presence key in Redis with a short TTL. A new
+message triggers a push only if the recipient's key is missing. You don't get notified about a message
+you're already looking at.
+
+### Promotion rank inside the query
+
+Promoted listings aren't a separate feed. The active promotion rank is the first `ORDER BY` key in listing
+search, so promoted items stay on top for every sort order and filter combination, and pagination stays
+consistent.
+
+## Results
+
+- Backend and Android/iOS app built in about three months, March to May 2026.
+- 274 backend tests across every domain module.
+- A written WebSocket protocol both sides built against, which kept backend and mobile work moving in parallel.

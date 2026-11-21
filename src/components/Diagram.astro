@@ -1,0 +1,68 @@
+---
+/**
+ * Figure wrapper for hand-drawn SVG diagrams. The SVG inherits the text color, so it follows the theme.
+ * Scrolls horizontally on narrow screens instead of shrinking labels to an unreadable size.
+ */
+interface Props {
+  caption: string;
+}
+
+const { caption } = Astro.props;
+---
+
+<figure class="diagram my-10 sm:my-14">
+  <div class="overflow-x-auto border border-text-muted/40 p-4 sm:p-8">
+    <div class="min-w-[720px]">
+      <slot />
+    </div>
+  </div>
+  <figcaption class="mt-3 text-base text-text-muted">{caption}</figcaption>
+</figure>
+
+<style is:global>
+  .diagram svg {
+    width: 100%;
+    height: auto;
+    color: var(--color-text);
+    font-family: var(--font-sans);
+  }
+  .diagram .d-box {
+    fill: var(--color-bg);
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+  .diagram .d-box-muted {
+    fill: var(--color-bg);
+    stroke: var(--color-text-muted);
+    stroke-width: 1;
+    stroke-dasharray: 4 4;
+  }
+  .diagram .d-title {
+    fill: currentColor;
+    font-size: 21px;
+    font-weight: 500;
+  }
+  .diagram .d-text {
+    fill: var(--color-text-muted);
+    font-size: 15.5px;
+  }
+  .diagram .d-edge {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+  .diagram .d-edge-dashed {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    stroke-dasharray: 6 5;
+  }
+  .diagram .d-label {
+    fill: currentColor;
+    font-size: 14.5px;
+    paint-order: stroke;
+    stroke: var(--color-bg);
+    stroke-width: 6px;
+    stroke-linejoin: round;
+  }
+</style>

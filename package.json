@@ -10,6 +10,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/mdx": "^8.1.6",
     "@fontsource-variable/oswald": "^5.3.0",
     "@fontsource/skranji": "^5.3.0",
     "@tailwindcss/vite": "^4.3.5",

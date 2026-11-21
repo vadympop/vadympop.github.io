@@ -1,0 +1,88 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import StackList from "../components/StackList.astro";
+import { getNeighbours } from "../lib/case-studies";
+
+interface Props {
+  /** <title> */
+  metaTitle: string;
+  description: string;
+  eyebrow: string;
+  title: string;
+  tagline: string;
+  period: string;
+  facts: { label: string; value: string }[];
+  stack: readonly string[];
+  back: { href: string; label: string };
+}
+
+const { metaTitle, description, eyebrow, title, tagline, period, facts, stack, back } = Astro.props;
+const { prev, next } = await getNeighbours(Astro.url.pathname);
+---
+
+<BaseLayout title={metaTitle} {description}>
+  <SiteHeader />
+  <main class="sm:px-15 px-5">
+    <article class="mx-auto max-w-4xl pt-10 sm:pt-16">
+      <a href={back.href} class="text-lg text-text-muted">← {back.label}</a>
+
+      <header class="mt-10 sm:mt-14">
+        <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 text-text-muted">
+          <span class="text-sm uppercase tracking-widest">{eyebrow}</span>
+          <span class="text-lg">{period}</span>
+        </div>
+        <h1 class="skranji-regular mt-3 text-5xl sm:text-7xl">{title}</h1>
+        <p class="mt-4 text-xl sm:text-2xl font-light leading-relaxed">{tagline}</p>
+
+        <dl class="mt-8 grid gap-x-10 gap-y-4 border-y border-text-muted/40 py-6 sm:grid-cols-2">
+          {
+            facts.map((fact) => (
+              <div>
+                <dt class="text-sm uppercase tracking-widest text-text-muted">{fact.label}</dt>
+                <dd class="mt-1 text-lg" set:html={fact.value} />
+              </div>
+            ))
+          }
+        </dl>
+
+        <div class="mt-6 space-y-5">
+          <StackList items={stack} />
+          <slot name="links" />
+        </div>
+      </header>
+
+      <div class="prose-case mt-6">
+        <slot />
+      </div>
+
+      {(prev || next) && (
+      <nav aria-label="Case studies" class="mt-24 grid gap-6 border-t border-text-muted/40 pt-8 sm:grid-cols-2">
+        {
+          prev ? (
+            <a href={prev.href} class="group after:hidden">
+              <span class="block text-sm uppercase tracking-widest text-text-muted">Previous</span>
+              <span class="skranji-regular text-2xl sm:text-3xl">← {prev.title}</span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          next && (
+            <a href={next.href} class="group text-right after:hidden">
+              <span class="block text-sm uppercase tracking-widest text-text-muted">Next</span>
+              <span class="skranji-regular text-2xl sm:text-3xl">{next.title} →</span>
+            </a>
+          )
+        }
+      </nav>
+      )}
+    </article>
+
+    <div class="mx-auto mt-20 max-w-4xl pb-12 sm:pb-16">
+      <SiteFooter />
+    </div>
+  </main>
+</BaseLayout>

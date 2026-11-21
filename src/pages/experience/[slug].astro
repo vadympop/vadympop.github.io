@@ -1,0 +1,36 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, render } from "astro:content";
+import CaseStudyLayout from "../../layouts/CaseStudyLayout.astro";
+import { formatPeriod } from "../../lib/format";
+import { PROFILE } from "../../data/profile";
+
+export const getStaticPaths = (async () => {
+  const entries = await getCollection("experience", ({ data }) => data.caseStudy);
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { data } = entry;
+const { Content } = await render(entry);
+
+const title = data.title ?? data.company;
+const facts = [
+  { label: "Role", value: `${data.role} @ ${data.company}` },
+  { label: "Employment", value: `${data.employment} · ${data.location}` },
+];
+---
+
+<CaseStudyLayout
+  metaTitle={`${title}: ${data.tagline ?? data.role} · ${PROFILE.fullName}`}
+  description={data.description ?? data.summary ?? data.tagline ?? ""}
+  eyebrow={data.parent ? `Work · ${data.company}` : "Work"}
+  {title}
+  tagline={data.tagline ?? data.summary ?? ""}
+  period={formatPeriod(data.period)}
+  {facts}
+  stack={data.stack}
+  back={{ href: "/#experience", label: "Experience" }}
+>
+  <Content />
+</CaseStudyLayout>
