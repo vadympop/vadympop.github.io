@@ -16,6 +16,10 @@ export default defineConfig({
       filter: (page) => !NOINDEX_PREFIXES.some((prefix) => new URL(page).pathname.startsWith(prefix)),
     }),
   ],
+  build: {
+    // ~24 KB of CSS: inlining it removes the only render-blocking request
+    inlineStylesheets: "always",
+  },
   markdown: {
     // Plain monochrome code blocks styled in global.css (a fixed highlighter theme would ignore light/dark)
     syntaxHighlight: false,

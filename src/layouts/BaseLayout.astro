@@ -4,6 +4,9 @@ import "@fontsource/skranji/400.css";
 import "@fontsource/skranji/700.css";
 import "../styles/global.css";
 import SeoHead, { type SeoProps } from "../components/SeoHead.astro";
+// Latin subsets used above the fold; preloaded so the hero text doesn't wait for CSS discovery
+import skranjiLatin from "@fontsource/skranji/files/skranji-latin-400-normal.woff2?url";
+import oswaldLatin from "@fontsource-variable/oswald/files/oswald-latin-wght-normal.woff2?url";
 
 type Props = SeoProps;
 
@@ -15,6 +18,8 @@ const seo = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="preload" href={skranjiLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={oswaldLatin} as="font" type="font/woff2" crossorigin />
     <SeoHead {...seo} />
     <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
