@@ -42,7 +42,7 @@ const years = [...new Set(items.map((item) => startYear(item.period)))];
   <ol class="max-w-4xl">
     {
       years.map((year) => (
-        <li class="grid gap-x-10 border-t border-text-muted/30 py-6 sm:grid-cols-[8rem_1fr]">
+        <li class="grid gap-x-10 border-t border-text-muted/30 py-6 sm:grid-cols-[8rem_1fr]" data-reveal>
           <p class="skranji-regular text-3xl text-text-muted">{year}</p>
           <ul class="space-y-3">
             {items

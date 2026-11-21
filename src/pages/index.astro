@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import NavigationBar from "../components/NavigationBar.astro";
+import SiteHeader from "../components/SiteHeader.astro";
 import About from "../components/sections/About.astro";
 import Experience from "../components/sections/Experience.astro";
 import Projects from "../components/sections/Projects.astro";
@@ -19,8 +20,11 @@ import { homeStructuredData } from "../lib/structured-data";
   ogType="profile"
   jsonLd={homeStructuredData()}
 >
+  <SiteHeader sticky />
   <main>
-    <div class="relative sm:px-15 px-5">
+    <div class="relative sm:px-15 px-5" data-hero>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="hero-grid-spot" aria-hidden="true"></div>
       <Hero />
       <NavigationBar />
     </div>

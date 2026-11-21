@@ -6,7 +6,7 @@ import ThemeToggle from "./ThemeToggle.astro";
 import { CONTACTS } from "../data/profile";
 ---
 
-<nav class="absolute bottom-0 left-0 w-screen sm:px-15 px-5" aria-label="Main">
+<nav class="absolute bottom-0 left-0 w-screen sm:px-15 px-5" aria-label="Main" data-hero-nav>
   <div class="py-4 sm:py-7 flex border-t border-(--secondary-color)">
     <div class="sm:flex space-x-10 hidden">
       {CONTACTS.map((contact) => <ContactLink text={contact.name} link={contact.link} />)}

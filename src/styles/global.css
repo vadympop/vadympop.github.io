@@ -210,3 +210,166 @@ body {
     }
   }
 }
+
+/* ───────────────────────── Motion & effects ─────────────────────────
+ * Everything below is decorative. Content is fully visible without JS, and all motion is
+ * disabled for users who prefer reduced motion.
+ */
+
+/* Hero: lines rise in on first load. Starts at 0.01 opacity (not 0) so the LCP element still counts as painted. */
+@keyframes hero-rise {
+  from {
+    opacity: 0.01;
+    transform: translateY(0.6em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.hero-line {
+  animation: hero-rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+/* Hero backdrop: faint dot grid, plus a brighter copy revealed around the cursor */
+.hero-grid,
+.hero-grid-spot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-size: 28px 28px;
+  background-position: 14px 14px;
+}
+
+.hero-grid {
+  background-image: radial-gradient(var(--color-text-muted) 1px, transparent 1.4px);
+  opacity: 0.35;
+  mask-image: linear-gradient(105deg, transparent 30%, #000 90%);
+}
+
+.hero-grid-spot {
+  background-image: radial-gradient(var(--color-text) 1.3px, transparent 1.8px);
+  opacity: var(--spot-opacity, 0);
+  mask-image: radial-gradient(circle 260px at var(--mx, -999px) var(--my, -999px), #000 0%, rgb(0 0 0 / 0.5) 40%, transparent 75%);
+  transition: opacity 0.4s ease;
+}
+
+/* Scroll reveal (only hides content once JS has marked the page) */
+.js [data-reveal] {
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--reveal-i, 0) * 70ms);
+}
+
+.js [data-reveal]:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+/* Experience: the line draws itself as you scroll (where scroll-driven animations are supported) */
+@keyframes line-draw {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@supports (animation-timeline: view()) {
+  .role-line::before {
+    content: "";
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--color-text);
+    transform-origin: top;
+    animation: line-draw linear both;
+    animation-timeline: view();
+    animation-range: entry 10% cover 55%;
+  }
+}
+
+/* Project cards: soft spotlight following the cursor */
+.spotlight {
+  isolation: isolate;
+}
+
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    circle 320px at var(--sx, 50%) var(--sy, 50%),
+    color-mix(in oklab, var(--color-text) 9%, transparent),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Sticky header shown after the hero */
+.sticky-header {
+  transform: translateY(-100%);
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  background-color: color-mix(in oklab, var(--color-bg) 92%, transparent);
+}
+
+.sticky-header[data-visible] {
+  transform: none;
+}
+
+/* Page transitions between documents (Chromium, Safari 18.2+); the project title morphs into the case-study heading */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+}
+
+/* Theme switch: circular reveal (driven from ThemeToggle via the View Transitions API) */
+html.theme-transition::view-transition-old(root),
+html.theme-transition::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+
+  .js [data-reveal]:not(.is-visible) {
+    opacity: 1;
+    transform: none;
+  }
+
+  .role-line::before {
+    display: none;
+  }
+
+  .hero-grid-spot {
+    display: none;
+  }
+}

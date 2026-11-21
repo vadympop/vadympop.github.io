@@ -45,6 +45,7 @@ const facts = [
   {facts}
   stack={data.stack}
   back={{ href: `/#project-${entry.id}`, label: "All projects" }}
+  transitionName={`title-${entry.id}`}
 >
   <ProjectLinks slot="links" links={data.links} title={data.title} />
   <Content />

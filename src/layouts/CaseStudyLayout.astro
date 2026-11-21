@@ -16,9 +16,11 @@ interface Props {
   facts: { label: string; value: string }[];
   stack: readonly string[];
   back: { href: string; label: string };
+  /** Matches the home card title so the heading morphs between pages */
+  transitionName?: string;
 }
 
-const { metaTitle, description, eyebrow, title, tagline, period, facts, stack, back } = Astro.props;
+const { metaTitle, description, eyebrow, title, tagline, period, facts, stack, back, transitionName } = Astro.props;
 const { prev, next } = await getNeighbours(Astro.url.pathname);
 ---
 
@@ -33,7 +35,7 @@ const { prev, next } = await getNeighbours(Astro.url.pathname);
           <span class="text-sm uppercase tracking-widest">{eyebrow}</span>
           <span class="text-lg">{period}</span>
         </div>
-        <h1 class="skranji-regular mt-3 text-5xl sm:text-7xl">{title}</h1>
+        <h1 class="skranji-regular mt-3 text-5xl sm:text-7xl w-fit" style={transitionName ? `view-transition-name: ${transitionName}` : undefined}>{title}</h1>
         <p class="mt-4 text-xl sm:text-2xl font-light leading-relaxed">{tagline}</p>
 
         <dl class="mt-8 grid gap-x-10 gap-y-4 border-y border-text-muted/40 py-6 sm:grid-cols-2">

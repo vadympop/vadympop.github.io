@@ -14,15 +14,15 @@ const more = all.filter((p) => !p.data.featured);
 <Section id="projects" title="Projects" index="03">
   <ul class="grid gap-6 lg:grid-cols-2">
     {
-      featured.map(({ id, data }) => (
-        <li id={`project-${id}`} class="project-card scroll-mt-8 group relative flex flex-col gap-5 border border-text-muted/50 p-6 sm:p-8 transition-colors hover:border-text">
+      featured.map(({ id, data }, i) => (
+        <li id={`project-${id}`} data-reveal style={`--reveal-i: ${i % 2}`} class="project-card spotlight scroll-mt-28 group relative flex flex-col gap-5 border border-text-muted/50 p-6 sm:p-8 transition-colors hover:border-text">
           <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-text-muted">
             <span class="uppercase tracking-widest text-sm">{PROJECT_KIND_LABELS[data.kind]}</span>
             <span>{formatPeriod(data.period)}</span>
           </div>
 
           <div>
-            <h3 class="skranji-regular text-3xl sm:text-4xl">{data.title}</h3>
+            <h3 class="skranji-regular text-3xl sm:text-4xl w-fit" style={data.caseStudy ? `view-transition-name: title-${id}` : undefined}>{data.title}</h3>
             <p class="mt-2 text-lg sm:text-xl font-light">{data.tagline}</p>
             {data.role && <p class="mt-2 text-base text-text-muted">Role: {data.role}</p>}
           </div>
@@ -52,11 +52,11 @@ const more = all.filter((p) => !p.data.featured);
     }
   </ul>
 
-  <h3 class="mt-20 mb-8 skranji-regular text-2xl sm:text-4xl">More projects</h3>
+  <h3 class="mt-20 mb-8 skranji-regular text-2xl sm:text-4xl" data-reveal>More projects</h3>
   <ul class="grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
     {
-      more.map(({ id, data }) => (
-        <li id={`project-${id}`} class="scroll-mt-8 flex flex-col gap-3 border-t border-text-muted/50 pt-5">
+      more.map(({ id, data }, i) => (
+        <li id={`project-${id}`} data-reveal style={`--reveal-i: ${i % 3}`} class="scroll-mt-28 flex flex-col gap-3 border-t border-text-muted/50 pt-5">
           <div class="flex flex-wrap items-baseline justify-between gap-x-3 text-text-muted text-sm">
             <span class="uppercase tracking-widest">{PROJECT_KIND_LABELS[data.kind]}</span>
             <span>{formatPeriod(data.period)}</span>

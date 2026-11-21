@@ -9,10 +9,10 @@ const links = [...CONTACTS.filter((c) => c.name !== "Email"), { name: "Freelance
 ---
 
 <Section id="contact" title="Contact" index="07" class="pb-12 sm:pb-16">
-  <p class="skranji-regular text-3xl sm:text-5xl max-w-4xl leading-tight">Have a backend to build or a team to join? Let's talk.</p>
-  <a href={`mailto:${PROFILE.email}`} class="mt-8 inline-block text-2xl sm:text-4xl break-all">{PROFILE.email}</a>
+  <p class="skranji-regular text-3xl sm:text-5xl max-w-4xl leading-tight" data-reveal>Have a backend to build or a team to join? Let's talk.</p>
+  <a href={`mailto:${PROFILE.email}`} class="mt-8 inline-block text-2xl sm:text-4xl break-all" data-reveal style="--reveal-i: 1">{PROFILE.email}</a>
 
-  <div class="mt-10 flex flex-wrap items-center gap-x-10 gap-y-6">
+  <div class="mt-10 flex flex-wrap items-center gap-x-10 gap-y-6" data-reveal style="--reveal-i: 2">
     <ul class="flex flex-wrap gap-x-8 gap-y-3">
       {
         links.map((contact) => (

@@ -29,6 +29,7 @@ const seo = Astro.props;
     <script is:inline>
       (() => {
         const root = document.documentElement;
+        root.classList.add("js");
         const media = window.matchMedia("(prefers-color-scheme: dark)");
         const saved = () => {
           try {
@@ -49,5 +50,8 @@ const seo = Astro.props;
   </head>
   <body>
     <slot />
+    <script>
+      import "../scripts/effects.ts";
+    </script>
   </body>
 </html>

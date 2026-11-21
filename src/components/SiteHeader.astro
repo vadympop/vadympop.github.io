@@ -1,9 +1,20 @@
 ---
 import ThemeToggle from "./ThemeToggle.astro";
 import { PROFILE } from "../data/profile";
+
+interface Props {
+  /** Fixed header that slides in after the hero (home page) */
+  sticky?: boolean;
+}
+
+const { sticky = false } = Astro.props;
 ---
 
-<header class="sm:px-15 px-5">
+<header
+  class:list={["sm:px-15 px-5", sticky && "sticky-header fixed inset-x-0 top-0 z-50 backdrop-blur-md"]}
+  data-sticky-header={sticky ? "" : undefined}
+  inert={sticky ? true : undefined}
+>
   <div class="flex items-center gap-6 border-b border-(--secondary-color) py-4 sm:gap-12 sm:py-6">
     <a href="/" class="skranji-regular text-2xl sm:text-3xl whitespace-nowrap after:hidden">
       <span class="sm:hidden">{PROFILE.firstName}</span><span class="hidden sm:inline">{PROFILE.fullName}</span>
