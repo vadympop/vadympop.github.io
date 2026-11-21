@@ -12,7 +12,7 @@ import { CONTACTS } from "../data/profile";
       {CONTACTS.map((contact) => <ContactLink text={contact.name} link={contact.link} />)}
     </div>
     <span class="max-sm:hidden grow"></span>
-    <div class="flex items-center justify-between sm:space-x-12 w-100 sm:w-auto">
+    <div class="flex items-center justify-between sm:gap-12 w-100 sm:w-auto">
       <ContactsMenu class="flex sm:hidden" />
       <SectionShortcut text="Experience" href="#experience" />
       <SectionShortcut text="Projects" href="#projects" />
