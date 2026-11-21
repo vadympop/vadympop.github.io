@@ -1,0 +1,83 @@
+<svg viewBox="0 0 960 490" role="img" aria-labelledby="litredis-diagram-title">
+  <title id="litredis-diagram-title">
+    litredis architecture: clients connect over TCP, each connection runs in its own Tokio task that parses RESP2 and keeps
+    session state. Commands go to a dispatcher that works on a sharded concurrent store. Pub/sub is a separate registry.
+    Background tasks purge expired keys and write JSON snapshots to disk.
+  </title>
+  <defs>
+    <marker id="litredis-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+    </marker>
+  </defs>
+
+  <!-- Row 1 -->
+  <rect class="d-box" x="20" y="40" width="190" height="100" rx="2"></rect>
+  <text class="d-title" x="115" y="75" text-anchor="middle">Clients</text>
+  <text class="d-text" x="115" y="98" text-anchor="middle">redis-cli · redis-py</text>
+  <text class="d-text" x="115" y="118" text-anchor="middle">litredis-cli</text>
+
+  <rect class="d-box" x="290" y="55" width="200" height="70" rx="2"></rect>
+  <text class="d-title" x="390" y="85" text-anchor="middle">TCP listener</text>
+  <text class="d-text" x="390" y="107" text-anchor="middle">Tokio runtime</text>
+
+  <!-- Row 2 -->
+  <rect class="d-box" x="290" y="190" width="200" height="120" rx="2"></rect>
+  <text class="d-title" x="390" y="220" text-anchor="middle">Connection task × N</text>
+  <text class="d-text" x="390" y="245" text-anchor="middle">RESP2 parse · encode</text>
+  <text class="d-text" x="390" y="266" text-anchor="middle">session: AUTH state</text>
+  <text class="d-text" x="390" y="287" text-anchor="middle">subscribed mode</text>
+
+  <rect class="d-box" x="560" y="190" width="180" height="120" rx="2"></rect>
+  <text class="d-title" x="650" y="225" text-anchor="middle">Command dispatch</text>
+  <text class="d-text" x="650" y="250" text-anchor="middle">strings · counters</text>
+  <text class="d-text" x="650" y="271" text-anchor="middle">TTL · utility · typed errors</text>
+
+  <rect class="d-box" x="800" y="140" width="140" height="80" rx="2"></rect>
+  <text class="d-title" x="870" y="172" text-anchor="middle">Pub/Sub</text>
+  <text class="d-text" x="870" y="195" text-anchor="middle">channel → senders</text>
+
+  <rect class="d-box" x="800" y="270" width="140" height="110" rx="2"></rect>
+  <text class="d-title" x="870" y="302" text-anchor="middle">Store</text>
+  <text class="d-text" x="870" y="326" text-anchor="middle">DashMap shards</text>
+  <text class="d-text" x="870" y="347" text-anchor="middle">Str | Int</text>
+  <text class="d-text" x="870" y="366" text-anchor="middle">+ expires_at</text>
+
+  <!-- Row 3 -->
+  <rect class="d-box" x="20" y="400" width="190" height="72" rx="2"></rect>
+  <text class="d-title" x="115" y="430" text-anchor="middle">dump.json</text>
+  <text class="d-text" x="115" y="453" text-anchor="middle">loaded on start</text>
+
+  <rect class="d-box" x="290" y="400" width="200" height="72" rx="2"></rect>
+  <text class="d-title" x="390" y="430" text-anchor="middle">Snapshot writer</text>
+  <text class="d-text" x="390" y="453" text-anchor="middle">every N s · on shutdown</text>
+
+  <rect class="d-box" x="560" y="400" width="180" height="72" rx="2"></rect>
+  <text class="d-title" x="650" y="430" text-anchor="middle">Expiry sweeper</text>
+  <text class="d-text" x="650" y="453" text-anchor="middle">every 100 ms</text>
+
+  <!-- Edges -->
+  <path class="d-edge" d="M210 90 H290" marker-end="url(#litredis-arrow)"></path>
+  <text class="d-label" x="250" y="82" text-anchor="middle">TCP</text>
+
+  <path class="d-edge" d="M390 125 V190" marker-end="url(#litredis-arrow)"></path>
+  <text class="d-label" x="390" y="162" text-anchor="middle">spawn per client</text>
+
+  <path class="d-edge-dashed" d="M115 140 V250 H290" marker-start="url(#litredis-arrow)" marker-end="url(#litredis-arrow)"></path>
+  <text class="d-label" x="115" y="200" text-anchor="middle">RESP2</text>
+
+  <path class="d-edge" d="M490 250 H560" marker-end="url(#litredis-arrow)"></path>
+
+  <path class="d-edge" d="M490 210 H520 V170 H800" marker-start="url(#litredis-arrow)" marker-end="url(#litredis-arrow)"></path>
+  <text class="d-label" x="660" y="162" text-anchor="middle">SUBSCRIBE · PUBLISH</text>
+
+  <path class="d-edge" d="M740 295 H800" marker-end="url(#litredis-arrow)"></path>
+
+  <path class="d-edge" d="M740 436 H870 V380" marker-end="url(#litredis-arrow)"></path>
+  <text class="d-label" x="800" y="428" text-anchor="middle">purge</text>
+
+  <path class="d-edge" d="M800 360 H520 V436 H490" marker-end="url(#litredis-arrow)"></path>
+  <text class="d-label" x="610" y="352" text-anchor="middle">read entries</text>
+
+  <path class="d-edge" d="M290 436 H210" marker-end="url(#litredis-arrow)"></path>
+  <text class="d-label" x="250" y="428" text-anchor="middle">atomic write</text>
+</svg>

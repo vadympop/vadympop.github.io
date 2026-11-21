@@ -1,0 +1,112 @@
+---
+title: litredis
+tagline: A Redis-compatible in-memory server in Rust. Works with redis-cli and redis-py.
+description: >-
+  Case study: litredis, a Redis-compatible key-value server in Rust with Tokio, RESP2, TTLs, pub/sub, password auth
+  and crash-safe JSON snapshots, tested against real Redis clients.
+period:
+  start: "2026-04"
+  end: "2026-05"
+kind: university
+team:
+  size: 2
+  credits:
+    - name: Yurii Oliinyk
+      github: https://github.com/yuriioliinyk4
+role: Server core, storage, persistence and auth
+stack: [Rust, Tokio, DashMap, serde, clap, GitHub Actions]
+highlights:
+  - RESP2 protocol and one async task per client connection.
+  - 19 commands across strings, counters, TTL, pub/sub and AUTH.
+  - TTL with background cleanup and JSON snapshot persistence, periodic and on shutdown.
+  - Integration test suite running in CI.
+links:
+  repo: https://github.com/vadympop/litredis
+featured: true
+order: 2
+caseStudy: true
+---
+
+import Diagram from "../../components/Diagram.astro";
+import LitredisArchitecture from "../../components/diagrams/LitredisArchitecture.astro";
+
+## Context
+
+litredis is our semester project for the Rust course at FIIT STU. The goal was a key-value server that
+existing Redis clients can use without knowing it isn't Redis. That means speaking the real wire protocol (RESP2), handling many clients at once, expiring
+keys on time and keeping data across restarts.
+
+We were a team of two and split the work by subsystem. I took the server core, the store and its commands,
+persistence, authentication and the error model. Yurii built the RESP2 parser, connection and session handling,
+pub/sub and the interactive CLI client.
+
+## What I built
+
+- **Server core:** the TCP listener on Tokio, configuration from CLI flags or a JSON file (clap + serde), and
+  shared state passed to every connection.
+- **Store and commands:** the concurrent key-value store and the string and counter commands: `SET` with `EX`,
+  `GET`, `DEL` with multiple keys, `EXISTS`, `COPY` with `REPLACE`, `PERSIST`, `INCR`, `DECR`, `INCRBY` and `DECRBY`.
+- **Persistence:** periodic JSON snapshots, a final snapshot on shutdown, and loading the snapshot on start.
+- **Authentication and errors:** optional password protection with `AUTH`, and typed errors that map to proper
+  RESP error replies instead of generic failures.
+- **Quality:** the GitHub Actions pipeline (`cargo fmt`, `clippy` with warnings as errors, tests), about two thirds of
+  the test code, the README and a Python demo that drives the server with the official `redis` client.
+
+## Architecture
+
+<Diagram caption="litredis: one task per connection, a sharded store, and two background tasks for expiry and snapshots.">
+  <LitredisArchitecture />
+</Diagram>
+
+The listener accepts a socket and spawns a Tokio task for it. That task owns everything about one client: it
+parses RESP2 frames, tracks whether the client has authenticated and whether it's in subscribed mode, and
+writes replies back. Commands go to a dispatcher that works on the shared store.
+
+Pub/sub is a separate registry from channel names to per-client senders, so publishing never touches the
+key-value data. Two background tasks run next to the connections: one sweeps expired keys every 100 ms, the
+other writes snapshots on an interval and once more when the server shuts down.
+
+## Key decisions
+
+### A sharded map instead of one big lock
+
+Every connection reads and writes the same data. A single `Mutex<HashMap>` would make every command wait for
+every other one. The store is a `DashMap`, which splits keys across independently locked shards, so commands on
+different keys almost never block each other. Each entry holds a typed value (`Str` or `Int`, so `INCR` doesn't
+reparse strings) and an optional expiry instant.
+
+### Expiry: checked on access and swept in the background
+
+Every read checks the entry's expiry first and treats an expired key as missing. That alone is correct, but
+keys nobody reads again would stay in memory forever. So a background task also purges expired entries every
+100 ms. Reads stay correct between sweeps, and memory doesn't leak.
+
+### Snapshots that can't be half-written
+
+A crash during a save must not destroy the previous snapshot. The writer serializes to a temporary file
+next to the target and then renames it over the old one. A rename on the same filesystem is atomic, so the
+file on disk is always either the old snapshot or the new one. A corrupt or missing file loads as an empty
+store instead of crashing the server.
+
+### TTLs that survive a restart
+
+In memory, expiry is a monotonic `Instant`, which means nothing after a restart. On save, each TTL is
+converted to an absolute Unix timestamp. On load, it's converted back to an `Instant` relative to the
+current time, and keys that expired while the server was down are dropped.
+
+### Disk I/O off the async runtime
+
+Writing a large file is blocking work. If it ran on a Tokio worker thread, every client on that thread would
+stall during a save. The snapshot runs in `spawn_blocking`, so connections keep being served while it writes.
+
+### Tests against the real protocol
+
+Integration tests start a real server on a random port and talk to it over TCP with raw RESP frames, the same
+bytes `redis-cli` sends. They cover the key-value commands, TTLs, auth, pub/sub and persistence round trips.
+Unit tests cover the parser and the snapshot format.
+
+## Results
+
+- Works with standard clients: `redis-cli`, `redis-py` and our own CLI.
+- 19 commands, about 3,400 lines of Rust.
+- 113 tests (44 integration, 69 unit) running in CI with formatting and lint checks.
