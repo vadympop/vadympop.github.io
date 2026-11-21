@@ -1,0 +1,79 @@
+<svg viewBox="0 0 960 470" role="img" aria-labelledby="moonlist-diagram-title">
+  <title id="moonlist-diagram-title">
+    Moonlist architecture: visitors use the Nuxt website, bot owners' bots post stats through the Python SDK, and both talk to
+    the FastAPI backend. The backend uses PostgreSQL, Redis for rate limiting and the Discord API for sign-in, and sends
+    webhooks back to bot owners. A Discord bot handles logs and moderation in the community server.
+  </title>
+  <defs>
+    <marker id="moonlist-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="currentColor"></path>
+    </marker>
+  </defs>
+
+  <!-- Clients -->
+  <rect class="d-box" x="20" y="40" width="180" height="76" rx="2"></rect>
+  <text class="d-title" x="110" y="73" text-anchor="middle">Visitors</text>
+  <text class="d-text" x="110" y="96" text-anchor="middle">browse · vote · review</text>
+
+  <rect class="d-box" x="20" y="200" width="180" height="100" rx="2"></rect>
+  <text class="d-title" x="110" y="232" text-anchor="middle">Bot owners' bots</text>
+  <text class="d-text" x="110" y="256" text-anchor="middle">moonlistclient SDK</text>
+  <text class="d-text" x="110" y="277" text-anchor="middle">stats · webhook listener</text>
+
+  <rect class="d-box" x="20" y="370" width="180" height="76" rx="2"></rect>
+  <text class="d-title" x="110" y="403" text-anchor="middle">Discord server</text>
+  <text class="d-text" x="110" y="426" text-anchor="middle">community · moderators</text>
+
+  <!-- Middle -->
+  <rect class="d-box" x="260" y="40" width="190" height="76" rx="2"></rect>
+  <text class="d-title" x="355" y="73" text-anchor="middle">Nuxt.js website</text>
+  <text class="d-text" x="355" y="96" text-anchor="middle">en · ru · ua · PWA</text>
+
+  <rect class="d-box" x="260" y="370" width="190" height="76" rx="2"></rect>
+  <text class="d-title" x="355" y="403" text-anchor="middle">Moonlist bot</text>
+  <text class="d-text" x="355" y="426" text-anchor="middle">logs · status · roles</text>
+
+  <!-- API -->
+  <rect class="d-box" x="510" y="40" width="200" height="290" rx="2"></rect>
+  <text class="d-title" x="610" y="72" text-anchor="middle">FastAPI REST API</text>
+  <text class="d-text" x="610" y="104" text-anchor="middle">bots · servers · users</text>
+  <text class="d-text" x="610" y="128" text-anchor="middle">bumps · comments · reports</text>
+  <text class="d-text" x="610" y="152" text-anchor="middle">news · audit log</text>
+  <text class="d-text" x="610" y="186" text-anchor="middle">Discord OAuth2 sign-in</text>
+  <text class="d-text" x="610" y="210" text-anchor="middle">per-bot API keys</text>
+  <text class="d-text" x="610" y="244" text-anchor="middle">moderation queue</text>
+  <text class="d-text" x="610" y="268" text-anchor="middle">webhook dispatcher</text>
+  <text class="d-text" x="610" y="292" text-anchor="middle">scheduled jobs</text>
+
+  <!-- Infrastructure -->
+  <rect class="d-box" x="770" y="40" width="170" height="70" rx="2"></rect>
+  <text class="d-title" x="855" y="70" text-anchor="middle">PostgreSQL</text>
+  <text class="d-text" x="855" y="92" text-anchor="middle">catalog · users · logs</text>
+
+  <rect class="d-box" x="770" y="150" width="170" height="70" rx="2"></rect>
+  <text class="d-title" x="855" y="180" text-anchor="middle">Redis</text>
+  <text class="d-text" x="855" y="202" text-anchor="middle">rate limiting</text>
+
+  <rect class="d-box" x="770" y="260" width="170" height="70" rx="2"></rect>
+  <text class="d-title" x="855" y="290" text-anchor="middle">Discord API</text>
+  <text class="d-text" x="855" y="312" text-anchor="middle">OAuth2 · user data</text>
+
+  <!-- Edges -->
+  <path class="d-edge" d="M200 78 H260" marker-end="url(#moonlist-arrow)"></path>
+  <path class="d-edge" d="M450 78 H510" marker-end="url(#moonlist-arrow)"></path>
+  <text class="d-label" x="480" y="70" text-anchor="middle">REST</text>
+
+  <path class="d-edge" d="M200 232 H510" marker-end="url(#moonlist-arrow)"></path>
+  <text class="d-label" x="355" y="224" text-anchor="middle">post stats · API key</text>
+
+  <path class="d-edge-dashed" d="M510 280 H200" marker-end="url(#moonlist-arrow)"></path>
+  <text class="d-label" x="355" y="272" text-anchor="middle">webhooks: bumps · comments · edits</text>
+
+  <path class="d-edge" d="M200 408 H260" marker-start="url(#moonlist-arrow)" marker-end="url(#moonlist-arrow)"></path>
+  <path class="d-edge" d="M450 408 H610 V330" marker-start="url(#moonlist-arrow)" marker-end="url(#moonlist-arrow)"></path>
+  <text class="d-label" x="530" y="400" text-anchor="middle">API client</text>
+
+  <path class="d-edge" d="M710 75 H770" marker-end="url(#moonlist-arrow)"></path>
+  <path class="d-edge" d="M710 185 H770" marker-end="url(#moonlist-arrow)"></path>
+  <path class="d-edge" d="M710 295 H770" marker-end="url(#moonlist-arrow)"></path>
+</svg>

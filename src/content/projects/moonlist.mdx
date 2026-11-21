@@ -1,0 +1,110 @@
+---
+title: Moonlist
+tagline: Public catalog of Discord bots and servers, run in production for 2,000+ users.
+description: >-
+  Case study: Moonlist, a public catalog of Discord bots and servers with a FastAPI backend, Discord OAuth2,
+  rate limiting, webhooks for bot owners, a Python SDK on PyPI and a Nuxt.js website, used by 2,000+ people.
+period:
+  start: "2021-02"
+  end: "2021-10"
+kind: product
+stack: [Python, FastAPI, PostgreSQL, Redis, Nuxt.js, discord.py, MkDocs, Docker]
+highlights:
+  - Public REST API with its own OAuth2 via Discord, rate limiting and outgoing webhooks for bot owners.
+  - moonlistclient, a Python SDK on PyPI with automatic stats posting and a webhook listener.
+  - Nuxt.js website, a moderation and monitoring bot, and a documentation site.
+links:
+  repo: https://github.com/vadympop/MoonlistClient
+  pypi: https://pypi.org/project/moonlistclient/
+featured: true
+order: 4
+caseStudy: true
+---
+
+import Diagram from "../../components/Diagram.astro";
+import MoonlistArchitecture from "../../components/diagrams/MoonlistArchitecture.astro";
+
+## Context
+
+Discord bots and communities need a place to be found. Moonlist was a public catalog for both: bot and server
+pages with descriptions, stats, votes ("bumps") and comments, plus tools for the developers who list their
+bots there. It ran in production in 2021 and grew to more than 2,000 users.
+
+It was a complete product rather than a single service. Five parts had to work together: the API, the
+website, a Discord bot for the community server, an SDK for bot developers and the public documentation.
+
+## What I built
+
+### REST API
+
+- FastAPI service for bots, servers, users, bumps, comments, reports, news and an audit log of changes.
+- Sign-in with **Discord OAuth2**: the API exchanges the code, fetches the Discord profile and manages access and refresh tokens.
+- **Per-bot API keys** that owners can regenerate, used by bots to post their stats.
+- A **moderation queue**: new bots wait for review before they appear in the catalog.
+- **Webhooks for bot owners** on new bumps, comments, edits and stats updates, each with its own secret token and optional target filter.
+- IP-based rate limiting backed by Redis, and a scheduled job that resets bump counters every two months.
+
+### Website
+
+- Nuxt.js app with Vuetify in three languages (English, Russian, Ukrainian), installable as a PWA.
+- Catalog and bot pages with metrics charts, user profiles, news, partners, an FAQ and an admin panel for moderators.
+
+### SDK, bot and docs
+
+- **moonlistclient**, a Python package on PyPI for discord.py bots. It posts server, user and shard counts on a schedule and runs a
+  small aiohttp server that receives Moonlist webhooks and checks their token.
+- The Moonlist Discord bot: logs, member events, bot status tracking and role sync in the community server.
+  It talks to the API through the same SDK.
+- Public API documentation with MkDocs: endpoints, models and rate limits.
+
+## Architecture
+
+<Diagram caption="Moonlist: one API serving the website, third-party bots and the community bot.">
+  <MoonlistArchitecture />
+</Diagram>
+
+Everything goes through one API. The website is a client like any other. Third-party bots use API keys and the SDK.
+The community bot uses the SDK too, so the public interface got tested by our own tooling every day.
+
+Webhook deliveries are queued and sent in the background, so a slow or dead endpoint on a bot owner's side
+never slows down the request that triggered it.
+
+## Key decisions
+
+### One public API for everything
+
+The website has no private shortcuts into the database. It uses the same API as third-party developers, with
+permission checks for moderator-only actions. That kept the API complete, and it's what made the SDK and the
+community bot possible without extra backend work.
+
+### Webhooks instead of polling
+
+Bot owners wanted to react to votes and comments, for example to reward users who bumped their bot. Polling
+the API for that would have cost everyone requests and rate-limit budget. Instead, owners register a URL and
+pick the triggers they care about. Moonlist pushes an event with their secret token, and the SDK's listener
+checks it and hands the event to the bot.
+
+### An SDK so integrations take minutes
+
+A REST API alone still leaves every developer writing the same HTTP code, stats loop and webhook server.
+The SDK reduced that to a few lines: create a client with your API key and stats posting runs on its own. Add a
+webhook object and events arrive as Python callbacks.
+
+### Rate limits from day one
+
+A public API with open sign-up attracts scripts. Every client IP had a request budget stored in Redis, with a
+temporary block when it was exceeded. The limits were documented, so legitimate integrations knew what to expect.
+
+## Looking back
+
+Moonlist was my first product with real users, and some choices show their age. The webhook queue lived in
+process memory, so a restart dropped pending deliveries. Today I'd put it on a durable queue with retries. The
+database was created with `create_all` instead of migrations, and the API used a synchronous database driver
+inside an async framework. Both are things I now set up correctly from the first commit: Alembic migrations
+and async SQLAlchemy.
+
+## Results
+
+- 2,000+ users of the catalog in 2021.
+- Five shipped parts: API, website, Discord bot, SDK on PyPI and public documentation.
+- An integration path for bot developers that took a few lines of code.
